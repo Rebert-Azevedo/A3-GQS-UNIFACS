@@ -14,16 +14,16 @@ public class Cliente {
     private Long id;
 
     private String nome;
-    private String senha;
     private String email;
+    private String senha;
     private LocalDate dataNascimento;
 
     public Cliente(){}
 
     public Cliente(String nome, String senha, String email, LocalDate dataNascimento){
         this.nome = nome;
-        this.senha = senha;
         this.email = email;
+        this.senha = senha;
         this.dataNascimento = dataNascimento;
     }
 
@@ -50,9 +50,11 @@ public class Cliente {
     public void setEmail(String email) {
         this.email = email;
     }
+
     public void setDataNascimento(LocalDate dataNascimento){
         this.dataNascimento = dataNascimento;
     }
+
     public LocalDate getDataNascimento(){
         return dataNascimento;
     }
