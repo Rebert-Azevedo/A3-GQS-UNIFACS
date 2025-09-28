@@ -13,14 +13,21 @@ public class Funcionario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
+    @Column(nullable = false)
     public String nome;
+    @Column(nullable = false, unique = true)
     public String email;
+    @Column(nullable = false)
     public String senha;
+    @Column(nullable = false)
     public LocalDate dataNascimento;
+    @Column(nullable = false)
     public double salario;
+    @Column(nullable = false)
     public String cargo;
 
     @CreationTimestamp
+    @Column(nullable = false)
     private LocalDateTime dataCriacao;
 
     public Funcionario(){}
