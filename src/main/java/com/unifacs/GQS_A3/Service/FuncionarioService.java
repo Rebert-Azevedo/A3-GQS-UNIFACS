@@ -1,7 +1,6 @@
 package com.unifacs.GQS_A3.Service;
 
 import com.unifacs.GQS_A3.Repository.FuncionarioRepository;
-import com.unifacs.GQS_A3.model.Cliente;
 import com.unifacs.GQS_A3.model.Funcionario;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +27,26 @@ public class FuncionarioService {
     }
     public Optional<Funcionario> buscarPorId(Long id){
         return funcionarioRepository.findById(id);
+    }
+
+
+
+    public Funcionario editarFuncionario(Long id, Funcionario alterFuncionario){
+        if(funcionarioRepository.existsById(id)){
+            Funcionario funcionario = funcionarioRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Funcionario não encontrado"));
+            funcionario.setNome(alterFuncionario.getNome() != null ? alterFuncionario.getNome(): funcionario.getNome());
+            funcionario.setEmail(alterFuncionario.getEmail() != null ? alterFuncionario.getEmail(): funcionario.getEmail());
+            funcionario.setSenha(alterFuncionario.getSenha() != null ? alterFuncionario.getSenha(): funcionario.getSenha());
+            funcionario.setDataNascimento(alterFuncionario.getDataNascimento() != null ? alterFuncionario.getDataNascimento(): funcionario.getDataNascimento());
+            funcionario.setSalario(alterFuncionario.getSalario() != 0 ? alterFuncionario.getSalario(): funcionario.getSalario());
+            funcionario.setCargo(alterFuncionario.getCargo() != null ? alterFuncionario.getCargo(): funcionario.getCargo());
+
+            return funcionarioRepository.save(funcionario);
+        }else{
+            System.out.println("Funcionario não encontrado");
+        }
+        return null;
     }
 
 }

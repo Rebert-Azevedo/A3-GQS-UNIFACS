@@ -40,4 +40,13 @@ public class FuncionarioController {
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
+
+    @PutMapping({"/{id}"})
+    public ResponseEntity<Funcionario> editarFuncionario(@PathVariable Long id, @RequestBody Funcionario funcionario){
+        //funcionario.setId(id);
+        Funcionario updatedFuncionario = funcionarioService.editarFuncionario(id, funcionario);
+
+        return ResponseEntity.ok(updatedFuncionario);
+
+    }
 }
