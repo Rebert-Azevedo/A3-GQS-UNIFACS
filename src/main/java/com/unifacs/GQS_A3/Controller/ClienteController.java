@@ -2,7 +2,6 @@ package com.unifacs.GQS_A3.Controller;
 
 import com.unifacs.GQS_A3.Service.ClienteService;
 import com.unifacs.GQS_A3.model.Cliente;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,6 +37,12 @@ public class ClienteController {
     public ResponseEntity<Void> removerCliente(@PathVariable Long id){
         clienteService.removerCliente(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping({"/{id}"})
+    public ResponseEntity<Cliente> editarCliente(@PathVariable Long id, @RequestBody Cliente cliente){
+        Cliente updatedCliente = clienteService.editarCliente(id, cliente);
+        return ResponseEntity.ok(updatedCliente);
     }
 
 }
