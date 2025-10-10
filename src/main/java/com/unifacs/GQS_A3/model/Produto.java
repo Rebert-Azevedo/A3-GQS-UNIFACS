@@ -1,20 +1,32 @@
 package com.unifacs.GQS_A3.model;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Entity
+@Table(name="produto")
+public class Produto{
 
-public class Produtos{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
     private  String nome;
-    private String descricao;
-    private double valor_unit;
 
-    public Produtos(String nome, String descricao, double valor_unit){
-        this.nome = nome;
-        this.descricao = descricao;
-        this.valor_unit = valor_unit;
-    }
+    private String descricao;
+
+    @Column(nullable = false)
+    private double valor;
+
+    @Column(nullable = false)
+    private int estoque;
 }
 
 
