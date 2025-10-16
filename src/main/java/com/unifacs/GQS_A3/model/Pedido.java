@@ -32,6 +32,6 @@ public class Pedido {
     }
 
     private void calcularTotal() {
-        valortotal = produtos.stream().mapToDouble(Produto::getPreco).sum();
+        valortotal = produtos.stream().mapToDouble(Produto::getValor).sum();
     }
 }
