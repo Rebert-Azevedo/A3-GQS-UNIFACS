@@ -15,16 +15,16 @@ public class Pedido {
     @Setter private Long id;
     @Setter private String cliente;
     private List<Produto> produtos = new ArrayList<>();
-    private double ValorTotal;
+    private double valortotal;
 
-    public void adicionarProdutos(Produto produto) {
+    public void adicionarProduto(Produto produto) {
         if (produto != null) {
             this.produtos.add(produto);
             this.calcularTotal();
         }
     }
 
-    public void removeProduto(Produto produto) {
+    public void removerProduto(Produto produto) {
         if (produto != null){
             this.produtos.remove(produto);
             calcularTotal();
@@ -32,6 +32,6 @@ public class Pedido {
     }
 
     private void calcularTotal() {
-        ValorTotal = produtos.stream().mapToDouble(Produto::getValorUnit).sum();
+        valortotal = produtos.stream().mapToDouble(Produto::getPreco).sum();
     }
 }
