@@ -17,19 +17,6 @@ public class Pedido {
     private List<Produto> produtos = new ArrayList<>();
     private double valortotal;
 
-    public void adicionarProduto(Produto produto) {
-        if (produto != null) {
-            this.produtos.add(produto);
-            this.calcularTotal();
-        }
-    }
-
-    public void removerProduto(Produto produto) {
-        if (produto != null){
-            this.produtos.remove(produto);
-            calcularTotal();
-        }
-    }
 
     private void calcularTotal() {
         valortotal = produtos.stream().mapToDouble(Produto::getValor).sum();

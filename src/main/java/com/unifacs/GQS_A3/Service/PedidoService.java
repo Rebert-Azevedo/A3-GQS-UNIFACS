@@ -21,11 +21,4 @@ public class PedidoService {
         this.pedidoRepository = pedidoRepository;
         this.produtoRepository = produtoRepository;
     }
-
-    @Transactional
-    public Pedido criarPedido(String nomeCliente) {
-        Pedido novoPedido = new Pedido();
-        novoPedido.setCliente(nomeCliente);
-        return pedidoRepository.save(novoPedido);
-    }
 }
