@@ -5,15 +5,15 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public class Produtos{
+public class Produto {
     private  String nome;
     private String descricao;
-    private double valor_unit;
+    private double preco;
 
-    public Produtos(String nome, String descricao, double valor_unit){
+    public Produto(String nome, String descricao, double preco){
         this.nome = nome;
         this.descricao = descricao;
-        this.valor_unit = valor_unit;
+        this.preco = preco;
     }
 }
 
