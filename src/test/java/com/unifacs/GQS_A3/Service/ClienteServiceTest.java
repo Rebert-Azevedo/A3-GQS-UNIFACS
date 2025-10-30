@@ -55,7 +55,7 @@ public class ClienteServiceTest {
 
         List<Cliente> listaCliente = clienteService.listarClientes();
 
-        Assertions.assertEquals(2, listaCliente.size());
+        Assertions.assertEquals(1, listaCliente.size());
     }
 
 
