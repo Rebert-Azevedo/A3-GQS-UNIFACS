@@ -10,7 +10,11 @@ name: Java CI Restaurante
 
 on:
   pull_request:
+<<<<<<< HEAD
     branches: [ "main", "develop" ]
+=======
+    branches: [ "main" ]
+>>>>>>> 1ad9998a5e523081324106a511b27a31845ce739
 jobs:
   testes:
 
@@ -25,6 +29,11 @@ jobs:
         cache: maven
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+<<<<<<< HEAD
+=======
+    - name: new version 
+      run: bash generateVersion.sh true
+>>>>>>> 1ad9998a5e523081324106a511b27a31845ce739
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
    # - name: Update dependency graph
