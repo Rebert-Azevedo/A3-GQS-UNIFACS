@@ -2,36 +2,33 @@ package com.unifacs.GQS_A3.model;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.Getter;
-
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+import lombok.Data;
 
-@Getter
+
+@Entity
+@Table(name = "pedidos")
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class Pedido {
-    @Setter private Long id;
-    @Setter private String cliente;
-    private List<Produto> produtos = new ArrayList<>();
-    private double valortotal;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public void adicionarProduto(Produto produto) {
-        if (produto != null) {
-            this.produtos.add(produto);
-            this.calcularTotal();
-        }
-    }
+    @Column(name = "valor_total")
+    private double valorTotal;
 
-    public void removerProduto(Produto produto) {
-        if (produto != null){
-            this.produtos.remove(produto);
-            calcularTotal();
-        }
-    }
+    @ManyToOne
+    @JoinColumn(name = "cliente_id")
+    @JsonIgnoreProperties("pedidos")
+    private Cliente cliente;
 
-    private void calcularTotal() {
-        valortotal = produtos.stream().mapToDouble(Produto::getPreco).sum();
-    }
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("pedido")
+    private List<PedidoProduto> pedidoProduto = new ArrayList<>();
+
 }
