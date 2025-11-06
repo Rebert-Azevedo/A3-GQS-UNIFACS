@@ -71,7 +71,7 @@ public class ClienteServiceTest {
 
         Optional<Cliente> clienteBuscado = clienteService.buscarPorId(1L);
 
-        clienteBuscado.ifPresent(meuProduto -> Assertions.assertEquals(cliente, meuProduto));
+        Assertions.assertEquals(cliente, clienteBuscado.get());
     }
 
     @Test
