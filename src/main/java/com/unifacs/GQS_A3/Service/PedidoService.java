@@ -38,12 +38,18 @@ public class PedidoService {
 
         Pedido novoPedido = new Pedido();
         novoPedido.setCliente(cliente);
+        novoPedido.setValorTotal(calcTotalPedido(pedidoDTO, novoPedido));
 
-        double valorTotal = 0;
+        return pedidoRepository.save(novoPedido);
+    }
+
+    public double calcTotalPedido(PedidoRequestDTO itensPedido, Pedido pedido){
         List<PedidoProduto> produtos = new ArrayList<>();
+        double valorTotal = 0;
 
-        for(ProdutoPedidoDTO produtoDTO: pedidoDTO.getProdutos()){
-            Produto produto = produtoRepository.findById(produtoDTO.getIdProduto())
+        for(ProdutoPedidoDTO produtoDTO: itensPedido.getProdutos()){
+            Produto produto = produtoRepository
+                    .findById(produtoDTO.getIdProduto())
                     .orElseThrow(() -> new RuntimeException("Produto " + produtoDTO.getIdProduto() + " não encontrado"));
 
             if(produto.getEstoque() < produtoDTO.getQuantidade()){
@@ -53,7 +59,7 @@ public class PedidoService {
             produtoRepository.save(produto);
 
             PedidoProduto pedidoProduto = new PedidoProduto();
-            pedidoProduto.setPedido(novoPedido);
+            pedidoProduto.setPedido(pedido);
             pedidoProduto.setProduto(produto);
             pedidoProduto.setQtdeProduto(produtoDTO.getQuantidade());
             produtos.add(pedidoProduto);
@@ -61,10 +67,9 @@ public class PedidoService {
             double subtotal = produto.getValor() * produtoDTO.getQuantidade();
             valorTotal += subtotal;
         }
-        novoPedido.setValorTotal(valorTotal);
-        novoPedido.setPedidoProduto(produtos);
 
-        return pedidoRepository.save(novoPedido);
+        pedido.setPedidoProduto(produtos);
+        return valorTotal;
     }
 
     public List<Pedido> listarPedidos(){
