@@ -69,7 +69,7 @@ public class PedidoController {
     @PostMapping()
     public ResponseEntity<Object> criarPedido(@RequestBody PedidoRequestDTO pedido){
 
-        Pedido novoPedido = pedidoService.criarPedido(pedido);
+        PedidoResponseDTO novoPedido = pedidoService.criarPedido(pedido);
         return new ResponseEntity<>(novoPedido, HttpStatus.CREATED);
     }
 }
