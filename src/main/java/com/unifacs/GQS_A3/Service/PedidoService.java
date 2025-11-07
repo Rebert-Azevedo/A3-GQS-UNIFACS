@@ -1,5 +1,6 @@
 package com.unifacs.GQS_A3.Service;
 
+import com.unifacs.GQS_A3.dto.PedidoResponseDTO;
 import com.unifacs.GQS_A3.model.Cliente;
 import com.unifacs.GQS_A3.model.Pedido;
 import com.unifacs.GQS_A3.model.PedidoProduto;
@@ -32,7 +33,7 @@ public class PedidoService {
         this.clienteRepository = clienteRepository;
     }
 
-    public Pedido criarPedido(PedidoRequestDTO pedidoDTO){
+    public PedidoResponseDTO criarPedido(PedidoRequestDTO pedidoDTO){
         Cliente cliente = clienteRepository.findById(pedidoDTO.getIdCliente()).orElseThrow(()
                 -> new RuntimeException("Cliente não encontrado"));
 
@@ -40,7 +41,15 @@ public class PedidoService {
         novoPedido.setCliente(cliente);
         novoPedido.setValorTotal(calcTotalPedido(pedidoDTO, novoPedido));
 
-        return pedidoRepository.save(novoPedido);
+        pedidoRepository.save(novoPedido);
+
+        PedidoResponseDTO pedidoResponse = new PedidoResponseDTO();
+        pedidoResponse.setId(novoPedido.getId());
+        pedidoResponse.setNomeCliente(novoPedido.getCliente().getNome());
+        pedidoResponse.setVlrTotal(novoPedido.getValorTotal());
+        pedidoResponse.setProdutos(pedidoDTO.getProdutos());
+
+        return pedidoResponse;
     }
 
     public double calcTotalPedido(PedidoRequestDTO itensPedido, Pedido pedido){
