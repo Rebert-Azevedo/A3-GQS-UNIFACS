@@ -2,6 +2,7 @@ package com.unifacs.GQS_A3.Service;
 
 import com.unifacs.GQS_A3.Repository.ClienteRepository;
 import com.unifacs.GQS_A3.exceptions.CampoNaoPreenchidoException;
+import com.unifacs.GQS_A3.exceptions.RecursoNaoEncontradoException;
 import com.unifacs.GQS_A3.model.Cliente;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +22,9 @@ public class ClienteService {
         return clienteRepository.findAll();
     }
 
-    public Optional<Cliente> buscarPorId(Long id){
-        return clienteRepository.findById(id);
+    public Cliente buscarPorId(Long id){
+        return clienteRepository.findById(id).
+                orElseThrow(() -> new RecursoNaoEncontradoException("Cliente com id "+id+" não encontrado"));
     }
 
     public Cliente registrarCliente(Cliente cliente){
@@ -32,6 +34,9 @@ public class ClienteService {
         return clienteRepository.save(cliente);
     }
     public void removerCliente(Long id){
+        if(!clienteRepository.existsById(id)){
+            throw new RecursoNaoEncontradoException("Cliente com id "+id+" não encontrado");
+        }
         clienteRepository.deleteById(id);
     }
 
