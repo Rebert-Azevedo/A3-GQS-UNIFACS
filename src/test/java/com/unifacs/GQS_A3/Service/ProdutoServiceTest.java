@@ -1,6 +1,8 @@
 package com.unifacs.GQS_A3.Service;
 
 import com.unifacs.GQS_A3.Repository.ProdutoRepository;
+import com.unifacs.GQS_A3.exceptions.CampoNaoPreenchidoException;
+import com.unifacs.GQS_A3.exceptions.RecursoNaoEncontradoException;
 import com.unifacs.GQS_A3.model.Produto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -24,7 +26,7 @@ public class ProdutoServiceTest {
     private ProdutoService produtoService;
 
     @Test
-    public void testarCriacaoProduto(){
+    public void deveCriarUmNovoProduto(){
         Produto produto = new Produto();
         produto.setNome("produto01");
         produto.setDescricao("Teste do primeiro produto");
@@ -35,11 +37,44 @@ public class ProdutoServiceTest {
 
         Produto novoProduto = produtoService.adicionarProduto(produto);
 
-        Assertions.assertEquals(produto, novoProduto);
+        Assertions.assertEquals(produto.getNome(), novoProduto.getNome());
+        Assertions.assertEquals(produto.getDescricao(), novoProduto.getDescricao());
+        Assertions.assertEquals(produto.getValor(), novoProduto.getValor());
+        Assertions.assertEquals(produto.getEstoque(), novoProduto.getEstoque());
     }
 
     @Test
-    public void testarListagemDeProdutos(){
+    public void naoDeveCriarUmNovoProdutoSemNome(){
+        Produto produto = new Produto();
+        produto.setDescricao("Teste produto");
+        produto.setValor(22.99);
+        produto.setEstoque(25);
+
+        Assertions.assertThrows(CampoNaoPreenchidoException.class, () -> produtoService.adicionarProduto(produto));
+    }
+
+    @Test
+    public void naoDeveCriarUmNovoProdutoSemValor(){
+        Produto produto = new Produto();
+        produto.setNome("Produto");
+        produto.setDescricao("Teste produto");
+        produto.setEstoque(25);
+
+        Assertions.assertThrows(CampoNaoPreenchidoException.class, () -> produtoService.adicionarProduto(produto));
+    }
+
+    @Test
+    public void naoDeveCriarUmNovoProdutoSemEstoque(){
+        Produto produto = new Produto();
+        produto.setNome("Produto");
+        produto.setDescricao("Teste produto");
+        produto.setValor(22.99);
+
+        Assertions.assertThrows(CampoNaoPreenchidoException.class, () -> produtoService.adicionarProduto(produto));
+    }
+
+    @Test
+    public void deveListarTodosOsProdutos(){
         Produto produto1 = new Produto();
         produto1.setNome("produto01");
         produto1.setDescricao("Teste do primeiro produto");
@@ -62,7 +97,7 @@ public class ProdutoServiceTest {
     }
 
     @Test
-    public void testaBuscaDeProdutoPorId(){
+    public void deveEncontrarProdutoPorId(){
         Produto produto = new Produto();
         produto.setId(1L);
         produto.setNome("produto");
@@ -72,13 +107,19 @@ public class ProdutoServiceTest {
 
         Mockito.when(produtoRepository.findById(1L)).thenReturn(Optional.of(produto));
 
-        Optional<Produto> produtoEncontrado = produtoService.buscarProdutoPorId(1L);
+        Produto produtoEncontrado = produtoService.buscarProdutoPorId(1L);
 
-        produtoEncontrado.ifPresent(meuProduto -> Assertions.assertEquals(produto, meuProduto));
+        Assertions.assertNotNull(produtoEncontrado);
+        Assertions.assertEquals(produto.getId(), produtoEncontrado.getId());
     }
 
     @Test
-    public void testarEdicaoDeProduto(){
+    public void naoDeveEncontrarProdutoPorId(){
+        Assertions.assertThrows(RecursoNaoEncontradoException.class, () -> produtoService.buscarProdutoPorId(1L));
+    }
+
+    @Test
+    public void deveEditarUmProduto(){
         Produto produto = new Produto();
         produto.setId(1L);
         produto.setNome("produto");
@@ -87,7 +128,6 @@ public class ProdutoServiceTest {
         produto.setEstoque(1);
 
         Mockito.when(produtoRepository.save(produto)).thenReturn(produto);
-        Mockito.when(produtoRepository.existsById(1L)).thenReturn(true);
         Mockito.when(produtoRepository.findById(1L)).thenReturn(Optional.of(produto));
 
         Produto produtoModificado = new Produto();
@@ -96,5 +136,13 @@ public class ProdutoServiceTest {
         Produto produtoEditado = produtoService.editarProduto(1L, produtoModificado);
 
         Assertions.assertEquals(produtoModificado.getEstoque(), produtoEditado.getEstoque());
+    }
+
+    @Test
+    public void naoDeveEditarProdutoInexistente(){
+        Produto produtoEditado = new Produto();
+        produtoEditado.setNome("Novo produto");
+
+        Assertions.assertThrows(RecursoNaoEncontradoException.class, () -> produtoService.editarProduto(1L, produtoEditado));
     }
 }
