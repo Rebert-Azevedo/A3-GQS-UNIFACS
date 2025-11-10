@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.unifacs</groupId>
 	<artifactId>A3-GQS-UNIFACS</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<name>A3-GQS-UNIFACS</name>
 	<description>Projeto A3 para a UC Gestão e Qualidade de Software</description>
 	<url/>
