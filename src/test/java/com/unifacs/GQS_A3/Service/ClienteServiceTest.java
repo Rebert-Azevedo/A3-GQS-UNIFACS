@@ -2,6 +2,7 @@ package com.unifacs.GQS_A3.Service;
 
 import com.unifacs.GQS_A3.Repository.ClienteRepository;
 import com.unifacs.GQS_A3.exceptions.CampoNaoPreenchidoException;
+import com.unifacs.GQS_A3.exceptions.RecursoNaoEncontradoException;
 import com.unifacs.GQS_A3.model.Cliente;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -26,7 +27,7 @@ public class ClienteServiceTest {
     private ClienteService clienteService;
 
     @Test
-    public void testaCriacaoDeCliente(){
+    public void deveRegistrarUmNovoCliente(){
         Cliente cliente = new Cliente();
         cliente.setNome("Cliente");
         cliente.setEmail("cliente@cliente.com");
@@ -35,11 +36,23 @@ public class ClienteServiceTest {
         Mockito.when(clienteRepository.save(cliente)).thenReturn(cliente);
 
         Cliente novoCliente = clienteService.registrarCliente(cliente);
-        Assertions.assertEquals(cliente, novoCliente);
+        Assertions.assertNotNull(novoCliente);
+        Assertions.assertEquals(cliente.getNome(), novoCliente.getNome());
+        Assertions.assertEquals(cliente.getEmail(), novoCliente.getEmail());
+        Assertions.assertEquals(cliente.getSenha(), novoCliente.getSenha());
     }
 
     @Test
-    public void testaListagemDeTodosOsClientes(){
+    public void naoDeveRegistrarUmNovoCliente(){
+        Cliente cliente = new Cliente();
+        cliente.setNome("Cliente");
+        cliente.setSenha("clienteSenha");
+
+        Assertions.assertThrows(CampoNaoPreenchidoException.class, () -> clienteService.registrarCliente(cliente));
+    }
+
+    @Test
+    public void deveListarTodosOsClientes(){
         Cliente cliente1 = new Cliente();
         cliente1.setNome("Cliente1");
         cliente1.setEmail("cliente1@cliente.com");
@@ -61,7 +74,7 @@ public class ClienteServiceTest {
 
 
     @Test
-    public void testaBuscaDeCliente(){
+    public void deveEncontrarClientePorId(){
         Cliente cliente = new Cliente();
         cliente.setId(1L);
         cliente.setNome("Cliente");
@@ -70,12 +83,19 @@ public class ClienteServiceTest {
 
         Mockito.when(clienteRepository.findById(1L)).thenReturn(Optional.of(cliente));
 
-        Optional<Cliente> clienteBuscado = clienteService.buscarPorId(1L);
-        clienteBuscado.ifPresent(meuCliente -> Assertions.assertEquals(cliente, meuCliente));
+        Cliente clienteBuscado = clienteService.buscarPorId(1L);
+        Assertions.assertNotNull(clienteBuscado);
+        Assertions.assertEquals(cliente.getId(), clienteBuscado.getId());
+        Assertions.assertEquals(cliente.getNome(), clienteBuscado.getNome());
     }
 
     @Test
-    public void testaModificacaoDeCliente(){
+    public void naoDeveEncontrarClientePorId(){
+        Assertions.assertThrows(RecursoNaoEncontradoException.class, () -> clienteService.buscarPorId(1L));
+    }
+
+    @Test
+    public void deveModificarUmCliente(){
         Cliente cliente = new Cliente();
         cliente.setId(1L);
         cliente.setNome("Cliente");
@@ -83,7 +103,6 @@ public class ClienteServiceTest {
         cliente.setSenha("clienteSenha");
 
         Mockito.when(clienteRepository.save(cliente)).thenReturn(cliente);
-        Mockito.when(clienteRepository.existsById(1L)).thenReturn(true);
         Mockito.when(clienteRepository.findById(1L)).thenReturn(Optional.of(cliente));
 
         Cliente clienteModificado = new Cliente();
@@ -95,5 +114,17 @@ public class ClienteServiceTest {
         Cliente clienteAlterado = clienteService.editarCliente(1L, clienteModificado);
 
         Assertions.assertEquals(clienteModificado.getNome(), clienteAlterado.getNome());
+        Assertions.assertEquals(clienteModificado.getEmail(), clienteAlterado.getEmail());
+    }
+
+    @Test
+    public void naoDeveModificarUmCliente(){
+        Cliente clienteModificado = new Cliente();
+        clienteModificado.setId(1L);
+        clienteModificado.setNome("clienteModificado");
+        clienteModificado.setEmail("clienteModificado@cliente.com");
+        clienteModificado.setSenha("clienteSenha");
+
+        Assertions.assertThrows(RecursoNaoEncontradoException.class, () -> clienteService.editarCliente(1L, clienteModificado));
     }
 }
