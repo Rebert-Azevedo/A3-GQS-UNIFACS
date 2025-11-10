@@ -4,6 +4,9 @@ import com.unifacs.GQS_A3.Repository.ProdutoRepository;
 import com.unifacs.GQS_A3.model.Produto;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class ProdutoService {
 
@@ -28,5 +31,11 @@ public class ProdutoService {
             return produtoRepository.save(produto);
         }
         return null;
+    }
+    public List<Produto> listarProdutos(){
+        return produtoRepository.findAll();
+    }
+    public Optional<Produto> buscarProdutoPorId(Long id){
+        return produtoRepository.findById(id);
     }
 }

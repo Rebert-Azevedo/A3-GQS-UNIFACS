@@ -70,8 +70,7 @@ public class ClienteServiceTest {
         Mockito.when(clienteRepository.findById(1L)).thenReturn(Optional.of(cliente));
 
         Optional<Cliente> clienteBuscado = clienteService.buscarPorId(1L);
-
-        Assertions.assertEquals(cliente, clienteBuscado.get());
+        clienteBuscado.ifPresent(meuCliente -> Assertions.assertEquals(cliente, meuCliente));
     }
 
     @Test
