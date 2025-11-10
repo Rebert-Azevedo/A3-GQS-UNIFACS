@@ -41,19 +41,14 @@ public class ClienteService {
     }
 
     public Cliente editarCliente(Long id, Cliente alterCliente){
-        if(clienteRepository.existsById(id)){
-            Cliente cliente = clienteRepository
-                    .findById(id)
-                    .orElseThrow(() -> new RuntimeException("Cliente não encontrado"));
+        Cliente cliente = clienteRepository
+                .findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Cliente com id "+id+" não encontrado"));
 
-            cliente.setNome(alterCliente.getNome() != null ? alterCliente.getNome(): cliente.getNome());
-            cliente.setSenha(alterCliente.getSenha() != null ? alterCliente.getSenha(): cliente.getSenha());
-            cliente.setEmail(alterCliente.getEmail() != null ? alterCliente.getEmail(): cliente.getEmail());
-            cliente.setDataNascimento(alterCliente.getDataNascimento() != null ? alterCliente.getDataNascimento(): cliente.getDataNascimento());
-            return clienteRepository.save(cliente);
-        }else{
-            System.out.println("Funcionario não encontrado");
-        }
-        return null;
+        cliente.setNome(alterCliente.getNome() != null ? alterCliente.getNome(): cliente.getNome());
+        cliente.setSenha(alterCliente.getSenha() != null ? alterCliente.getSenha(): cliente.getSenha());
+        cliente.setEmail(alterCliente.getEmail() != null ? alterCliente.getEmail(): cliente.getEmail());
+        cliente.setDataNascimento(alterCliente.getDataNascimento() != null ? alterCliente.getDataNascimento(): cliente.getDataNascimento());
+        return clienteRepository.save(cliente);
     }
 }
