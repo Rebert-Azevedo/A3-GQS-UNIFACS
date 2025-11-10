@@ -1,6 +1,7 @@
 package com.unifacs.GQS_A3.Service;
 
 import com.unifacs.GQS_A3.Repository.ClienteRepository;
+import com.unifacs.GQS_A3.exceptions.CampoNaoPreenchidoException;
 import com.unifacs.GQS_A3.model.Cliente;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
