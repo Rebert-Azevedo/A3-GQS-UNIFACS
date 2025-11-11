@@ -90,7 +90,8 @@ public class PedidoService {
         pedidoRepository.deleteById(id);
     }
 
-    public Optional<Pedido> buscarPedido(Long id) {
-        return pedidoRepository.findById(id);
+    public Pedido buscarPedido(Long id) {
+        return pedidoRepository.findById(id).
+                orElseThrow(() -> new RecursoNaoEncontradoException("Pedido: " +id+ " não encontrado"));
     }
 }
