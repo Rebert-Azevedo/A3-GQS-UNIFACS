@@ -27,13 +27,15 @@ public class ClienteControllerTest {
     @Autowired
     ClienteRepository clienteRepository;
 
+    private Cliente clienteAtual;
+
     @BeforeEach
     void inicializar(){
         Cliente cliente = new Cliente();
         cliente.setNome("Cliente");
         cliente.setEmail("cliente@cliente.com");
         cliente.setSenha("clienteSenha");
-        clienteRepository.save(cliente);
+        clienteAtual = clienteRepository.save(cliente);
     }
 
     @AfterEach
@@ -122,41 +124,40 @@ public class ClienteControllerTest {
 
     @Test
     public void deveEncontrarClientePorId() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/cliente/1"))
+        Long idAtual = clienteAtual.getId();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/cliente/"+idAtual))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value("1"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(idAtual))
                 .andDo(MockMvcResultHandlers.print());
     }
 
     @Test
     public void naoDeveEncontrarClientePorId() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/cliente/2"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/cliente/100000"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andDo(MockMvcResultHandlers.print());
     }
 
     @Test
     public void deveModificarUmCliente() throws Exception{
-        Cliente cliente = new Cliente();
-        cliente.setId(2L);
-        cliente.setNome("Cliente");
-        cliente.setEmail("cliente@cliente.com");
-        cliente.setSenha("clienteSenha");
-        cliente.setDataCriacao(LocalDateTime.now());
-        clienteRepository.save(cliente);
+        Long idParaModificar = clienteAtual.getId();
 
         Cliente clienteTest = new Cliente();
         clienteTest.setNome("Cliente Modificado");
-
+        clienteTest.setEmail("clientemodificado@email.com");
+        clienteTest.setSenha("senhaModificada@");
         String body = objectMapper.writeValueAsString(clienteTest);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/cliente/2")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/cliente/"+idParaModificar)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(body)
                 )
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.nome").value("Cliente Modificado"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.nome").value(clienteTest.getNome()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(clienteTest.getEmail()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.senha").value(clienteTest.getSenha()))
                 .andDo(MockMvcResultHandlers.print());
     }
 
@@ -167,7 +168,7 @@ public class ClienteControllerTest {
 
         String body = objectMapper.writeValueAsString(clienteTest);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/cliente/2")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/cliente/100000")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(body)
