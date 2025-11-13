@@ -1,6 +1,7 @@
 package com.unifacs.GQS_A3.Service;
 
 import com.unifacs.GQS_A3.dto.PedidoResponseDTO;
+import com.unifacs.GQS_A3.exceptions.EstoqueInsuficienteException;
 import com.unifacs.GQS_A3.exceptions.RecursoNaoEncontradoException;
 import com.unifacs.GQS_A3.model.Cliente;
 import com.unifacs.GQS_A3.model.Pedido;
@@ -63,7 +64,7 @@ public class PedidoService {
                     .orElseThrow(() -> new RecursoNaoEncontradoException("Produto " + produtoDTO.getIdProduto() + " não encontrado"));
 
             if(produto.getEstoque() < produtoDTO.getQuantidade()){
-                throw new RuntimeException("Estoque insuficiente para o produto: " + produto.getNome());
+                throw new EstoqueInsuficienteException("Estoque insuficiente para o produto: " + produto.getNome());
             }
             produto.setEstoque(produto.getEstoque() - produtoDTO.getQuantidade());
             produtoRepository.save(produto);
