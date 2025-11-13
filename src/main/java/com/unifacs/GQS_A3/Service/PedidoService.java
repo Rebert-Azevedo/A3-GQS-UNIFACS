@@ -1,6 +1,7 @@
 package com.unifacs.GQS_A3.Service;
 
 import com.unifacs.GQS_A3.dto.PedidoResponseDTO;
+import com.unifacs.GQS_A3.exceptions.RecursoNaoEncontradoException;
 import com.unifacs.GQS_A3.model.Cliente;
 import com.unifacs.GQS_A3.model.Pedido;
 import com.unifacs.GQS_A3.model.PedidoProduto;
@@ -35,7 +36,7 @@ public class PedidoService {
 
     public PedidoResponseDTO criarPedido(PedidoRequestDTO pedidoDTO){
         Cliente cliente = clienteRepository.findById(pedidoDTO.getIdCliente()).orElseThrow(()
-                -> new RuntimeException("Cliente não encontrado"));
+                -> new RecursoNaoEncontradoException("Cliente não encontrado"));
 
         Pedido novoPedido = new Pedido();
         novoPedido.setCliente(cliente);
@@ -59,7 +60,7 @@ public class PedidoService {
         for(ProdutoPedidoDTO produtoDTO: itensPedido.getProdutos()){
             Produto produto = produtoRepository
                     .findById(produtoDTO.getIdProduto())
-                    .orElseThrow(() -> new RuntimeException("Produto " + produtoDTO.getIdProduto() + " não encontrado"));
+                    .orElseThrow(() -> new RecursoNaoEncontradoException("Produto " + produtoDTO.getIdProduto() + " não encontrado"));
 
             if(produto.getEstoque() < produtoDTO.getQuantidade()){
                 throw new RuntimeException("Estoque insuficiente para o produto: " + produto.getNome());
@@ -89,7 +90,8 @@ public class PedidoService {
         pedidoRepository.deleteById(id);
     }
 
-    public Optional<Pedido> buscarPedido(Long id) {
-        return pedidoRepository.findById(id);
+    public Pedido buscarPedido(Long id) {
+        return pedidoRepository.findById(id).
+                orElseThrow(() -> new RecursoNaoEncontradoException("Pedido: " +id+ " não encontrado"));
     }
 }

@@ -56,7 +56,7 @@ public class PedidoController {
 
             return lista;
         };
-        Pedido pedido = pedidoService.buscarPedido(id).orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
+        Pedido pedido = pedidoService.buscarPedido(id);
         PedidoResponseDTO pedidoResponse = new PedidoResponseDTO();
         pedidoResponse.setId(pedido.getId());
         pedidoResponse.setNomeCliente(pedido.getCliente().getNome());
