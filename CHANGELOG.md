@@ -1,3 +1,19 @@
+# [1.1.0](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/compare/v1.0.0...v1.1.0) (2025-11-13)
+
+
+### Features
+
+* Adicionada excecao para buscarPedido ([9141f2f](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/commit/9141f2fc31e986995905ffa0be38ebcade50341e))
+* Adicionada excecao para buscarPedido ([#35](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/issues/35)) ([9c9a80d](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/commit/9c9a80d51e7565409625fffaf6276a2cf6869414))
+* Adicionada Exception para lidar com recursos nao encontrados ([860978f](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/commit/860978f432d6a65857df83ea47f277ef05862bd1))
+* Adicionadas excecoes personalizadas para ProdutoService ([ae50f47](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/commit/ae50f473a0ead255e09a7ef5f63df2c33a0c8127))
+* Adicionado pacote de exceções ([#30](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/issues/30)) ([652e8ff](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/commit/652e8fffcb51a73df722c9b2de015080a60052e4))
+* Adicionado pacote para lidar com excecoes de campos nao preenchidos ([0474e8b](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/commit/0474e8bf99b37b1d0a081b038ab99a97369942eb))
+* Exceptions personalizadas para pedidos ([267165e](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/commit/267165e0d4569b2f39183c70f286857d63b24771))
+* Exceptions personalizadas para pedidos ([#34](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/issues/34)) ([09d8268](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/commit/09d82687a0c3547e7d21b1aac718157957b64199))
+* Exceptions personalizadas para produtos e novos testes  ([#33](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/issues/33)) ([4a4c1de](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/commit/4a4c1deed14d59b50ec64413567207bf770c01f5))
+* merge develop into main ([#41](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/issues/41)) ([0133d4d](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/commit/0133d4d0054b3c7e22d41e9bcf631274185fc55c))
+
 # 1.0.0 (2025-11-10)
 
 
