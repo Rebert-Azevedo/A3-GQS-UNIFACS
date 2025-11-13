@@ -7,6 +7,7 @@ import com.unifacs.GQS_A3.Repository.ProdutoRepository;
 import com.unifacs.GQS_A3.dto.PedidoRequestDTO;
 import com.unifacs.GQS_A3.dto.PedidoResponseDTO;
 import com.unifacs.GQS_A3.dto.ProdutoPedidoDTO;
+import com.unifacs.GQS_A3.exceptions.EstoqueInsuficienteException;
 import com.unifacs.GQS_A3.exceptions.RecursoNaoEncontradoException;
 import com.unifacs.GQS_A3.model.Cliente;
 import com.unifacs.GQS_A3.model.Pedido;
@@ -232,6 +233,6 @@ public class PedidoServiceTest {
 
         Mockito.when(produtoRepository.findById(1L)).thenReturn(Optional.of(produto));
 
-        Assertions.assertThrows(RuntimeException.class, () -> pedidoService.calcTotalPedido(pedidoRequest, pedido));
+        Assertions.assertThrows(EstoqueInsuficienteException.class, () -> pedidoService.calcTotalPedido(pedidoRequest, pedido));
     }
 }
