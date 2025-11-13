@@ -156,6 +156,32 @@ public class PedidoControllerTest {
     }
 
     @Test
+    public void naoDeveCriarPedidoComEstoqueInsuficiente() throws Exception{
+        Produto produto = new Produto();
+        produto.setNome("Produto com estoque baixo");
+        produto.setValor(10.00);
+        produto.setEstoque(1);
+        Produto produtoSalvoLocal = produtoRepository.save(produto);
+
+        ProdutoPedidoDTO produtoPedidoDTO = new ProdutoPedidoDTO();
+        produtoPedidoDTO.setIdProduto(produtoSalvoLocal.getId());
+        produtoPedidoDTO.setQuantidade(5); // Requesting more than available
+
+        List<ProdutoPedidoDTO> listaProdutos = List.of(produtoPedidoDTO);
+        PedidoRequestDTO pedido = pedidoRequest(listaProdutos, clienteSalvo);
+
+        String body = objectMapper.writeValueAsString(pedido);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/pedidos")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body)
+                )
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("Estoque insuficiente"))
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
     public void deveEncontrarPedido() throws Exception{
         Long idPedidoAtual = pedidoSalvo.getId();
         mockMvc.perform(MockMvcRequestBuilders.get("/api/pedidos/"+idPedidoAtual))
