@@ -68,7 +68,7 @@ public class ProdutoControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body)
                         )
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.nome").value("ProdutoTeste"))
                 .andDo(MockMvcResultHandlers.print());
 
