@@ -49,7 +49,7 @@ public class ProdutoControllerTest {
 
     @Test
     public void deveListarTodosOsProdutos() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/produto"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/produtos"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print());
     }
@@ -64,7 +64,7 @@ public class ProdutoControllerTest {
 
         String body = objectMapper.writeValueAsString(produtoTeste);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/produto")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/produtos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body)
                         )
@@ -83,7 +83,7 @@ public class ProdutoControllerTest {
 
         String body = objectMapper.writeValueAsString(produtoTeste);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/produto")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/produtos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body)
                         )
@@ -102,7 +102,7 @@ public class ProdutoControllerTest {
 
         String body = objectMapper.writeValueAsString(produtoTeste);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/produto")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/produtos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body)
                         )
@@ -121,7 +121,7 @@ public class ProdutoControllerTest {
 
         String body = objectMapper.writeValueAsString(produtoTeste);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/produto")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/produtos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body)
                         )
@@ -134,7 +134,7 @@ public class ProdutoControllerTest {
     public void deveEncontrarProdutoPorId() throws Exception{
         Long idAtual = produtoSalvo.getId();
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/produto/"+idAtual))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/produtos/" +idAtual))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(idAtual))
                 .andDo(MockMvcResultHandlers.print());
@@ -142,7 +142,7 @@ public class ProdutoControllerTest {
 
     @Test
     public void naoDeveEncontrarProdutoInexistente() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/produto/10000"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/produtos/10000"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andDo(MockMvcResultHandlers.print());
     }
@@ -158,7 +158,7 @@ public class ProdutoControllerTest {
 
         String body = objectMapper.writeValueAsString(produtoModificado);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/produto/"+idParaModificar)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/produtos/" +idParaModificar)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -176,7 +176,7 @@ public class ProdutoControllerTest {
 
         String body = objectMapper.writeValueAsString(produtoModificado);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/produto/10000")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/produtos/10000")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())

@@ -15,8 +15,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.time.LocalDateTime;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 public class ClienteControllerTest {
@@ -52,7 +50,7 @@ public class ClienteControllerTest {
 
     @Test
     public void deveListarClientes() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/cliente"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/clientes"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print());
     }
@@ -66,11 +64,11 @@ public class ClienteControllerTest {
 
         String body = objectMapper.writeValueAsString(clienteTest);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/cliente")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/clientes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(body)
-                ).andExpect(MockMvcResultMatchers.status().isOk())
+                ).andExpect(MockMvcResultMatchers.status().isCreated())
                 .andDo(MockMvcResultHandlers.print());
     }
 
@@ -82,7 +80,7 @@ public class ClienteControllerTest {
 
         String body = objectMapper.writeValueAsString(clienteTest);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/cliente")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/clientes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(body)
@@ -98,7 +96,7 @@ public class ClienteControllerTest {
 
         String body = objectMapper.writeValueAsString(clienteTest);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/cliente")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/clientes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(body)
@@ -114,7 +112,7 @@ public class ClienteControllerTest {
 
         String body = objectMapper.writeValueAsString(clienteTest);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/cliente")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/clientes")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(body)
@@ -126,7 +124,7 @@ public class ClienteControllerTest {
     public void deveEncontrarClientePorId() throws Exception{
         Long idAtual = clienteAtual.getId();
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/cliente/"+idAtual))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/clientes/" +idAtual))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(idAtual))
                 .andDo(MockMvcResultHandlers.print());
@@ -134,7 +132,7 @@ public class ClienteControllerTest {
 
     @Test
     public void naoDeveEncontrarClientePorId() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/cliente/100000"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/clientes/100000"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andDo(MockMvcResultHandlers.print());
     }
@@ -149,7 +147,7 @@ public class ClienteControllerTest {
         clienteTest.setSenha("senhaModificada@");
         String body = objectMapper.writeValueAsString(clienteTest);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/cliente/"+idParaModificar)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/clientes/" +idParaModificar)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(body)
@@ -168,7 +166,7 @@ public class ClienteControllerTest {
 
         String body = objectMapper.writeValueAsString(clienteTest);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/cliente/100000")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/clientes/100000")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(body)
