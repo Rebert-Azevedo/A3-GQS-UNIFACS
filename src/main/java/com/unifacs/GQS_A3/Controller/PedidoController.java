@@ -38,8 +38,8 @@ public class PedidoController {
     }
 
     @GetMapping
-    public List<Pedido> listarPedidos(){
-        return pedidoService.listarPedidos();
+    public ResponseEntity<List<Pedido>> listarPedidos(){
+        return new ResponseEntity<>(pedidoService.listarPedidos(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")

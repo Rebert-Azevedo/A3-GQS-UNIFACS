@@ -1,6 +1,7 @@
 package com.unifacs.GQS_A3.Service;
 
 import com.unifacs.GQS_A3.Repository.FuncionarioRepository;
+import com.unifacs.GQS_A3.exceptions.RecursoNaoEncontradoException;
 import com.unifacs.GQS_A3.model.Funcionario;
 import org.springframework.stereotype.Service;
 
@@ -19,17 +20,23 @@ public class FuncionarioService {
     public List<Funcionario> listarFuncionarios(){
         return funcionarioRepository.findAll();
     }
+
     public Funcionario registrarFuncionario(Funcionario funcionario){
         return funcionarioRepository.save(funcionario);
     }
+
     public void removerFuncionario(Long id){
+        if(!funcionarioRepository.existsById(id)){
+            throw new RecursoNaoEncontradoException("Funcionario de id: " + id + " não encontrado");
+        }
         funcionarioRepository.deleteById(id);
     }
-    public Optional<Funcionario> buscarPorId(Long id){
-        return funcionarioRepository.findById(id);
+
+    public Funcionario buscarPorId(Long id){
+        return funcionarioRepository
+                .findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Funcionario de id: " + id + " não encontrado"));
     }
-
-
 
     public Funcionario editarFuncionario(Long id, Funcionario alterFuncionario){
         if(funcionarioRepository.existsById(id)){
