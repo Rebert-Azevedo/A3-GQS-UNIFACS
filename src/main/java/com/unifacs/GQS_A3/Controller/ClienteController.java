@@ -2,6 +2,7 @@ package com.unifacs.GQS_A3.Controller;
 
 import com.unifacs.GQS_A3.Service.ClienteService;
 import com.unifacs.GQS_A3.model.Cliente;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,31 +18,32 @@ public class ClienteController {
     }
 
     @GetMapping
-    public List<Cliente> listarClientes(){
-        return clienteService.listarClientes();
+    public ResponseEntity<List<Cliente>> listarClientes(){
+        return new ResponseEntity<>(clienteService.listarClientes(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Cliente> buscarCliente(@PathVariable Long id){
         Cliente cliente = clienteService.buscarPorId(id);
-        return ResponseEntity.ok(cliente);
+        return new ResponseEntity<>(cliente, HttpStatus.OK);
     }
 
     @PostMapping
-    public Cliente registrarCliente(@RequestBody Cliente cliente){
-        return clienteService.registrarCliente(cliente);
+    public ResponseEntity<Cliente> registrarCliente(@RequestBody Cliente cliente){
+        Cliente clienteRegistrado = clienteService.registrarCliente(cliente);
+        return new ResponseEntity<>(clienteRegistrado, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removerCliente(@PathVariable Long id){
         clienteService.removerCliente(id);
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping({"/{id}"})
     public ResponseEntity<Cliente> editarCliente(@PathVariable Long id, @RequestBody Cliente cliente){
         Cliente updatedCliente = clienteService.editarCliente(id, cliente);
-        return ResponseEntity.ok(updatedCliente);
+        return new ResponseEntity<>(updatedCliente, HttpStatus.OK);
     }
 
 }
