@@ -121,6 +121,22 @@ public class ClienteControllerTest {
     }
 
     @Test
+    public void naoDeveRegistrarClienteComEmailJaCadastrado() throws Exception {
+        Cliente clienteTest = new Cliente();
+        clienteTest.setNome("Cliente");
+        clienteTest.setEmail("cliente@cliente.com");
+        clienteTest.setSenha("senhaTeste");
+        String body = objectMapper.writeValueAsString(clienteTest);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/clientes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .characterEncoding("UTF-8")
+                        .content(body)
+                ).andExpect(MockMvcResultMatchers.status().isBadGateway())
+                .andDo(MockMvcResultHandlers.print());
+    }
+
+    @Test
     public void deveEncontrarClientePorId() throws Exception{
         Long idAtual = clienteAtual.getId();
 
