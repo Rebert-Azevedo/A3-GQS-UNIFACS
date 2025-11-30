@@ -1,12 +1,12 @@
 package com.unifacs.GQS_A3.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.unifacs.GQS_A3.Repository.ClienteRepository;
-import com.unifacs.GQS_A3.Repository.PedidoRepository;
-import com.unifacs.GQS_A3.Repository.ProdutoRepository;
+import com.unifacs.GQS_A3.repository.UsuarioRepository;
+import com.unifacs.GQS_A3.repository.PedidoRepository;
+import com.unifacs.GQS_A3.repository.ProdutoRepository;
 import com.unifacs.GQS_A3.dto.PedidoRequestDTO;
 import com.unifacs.GQS_A3.dto.ProdutoPedidoDTO;
-import com.unifacs.GQS_A3.model.Cliente;
+import com.unifacs.GQS_A3.model.Usuario;
 import com.unifacs.GQS_A3.model.Pedido;
 import com.unifacs.GQS_A3.model.Produto;
 import org.junit.jupiter.api.AfterEach;
@@ -31,8 +31,8 @@ public class PedidoControllerTest {
     MockMvc mockMvc;
 
     @Autowired
-    ClienteRepository clienteRepository;
-    private Cliente clienteSalvo;
+    UsuarioRepository usuarioRepository;
+    private Usuario usuarioSalvo;
 
     @Autowired
     PedidoRepository pedidoRepository;
@@ -44,15 +44,15 @@ public class PedidoControllerTest {
 
     @BeforeEach
     void inicializar(){
-        Cliente cliente = new Cliente();
-        cliente.setNome("Cliente");
-        cliente.setEmail("cliente@email.com");
-        cliente.setSenha("senha");
+        Usuario usuario = new Usuario();
+        usuario.setNome("Usuario");
+        usuario.setEmail("usuario@email.com");
+        usuario.setSenha("senha");
 
-        clienteSalvo = clienteRepository.save(cliente);
+        usuarioSalvo = usuarioRepository.save(usuario);
 
         Pedido pedido = new Pedido();
-        pedido.setCliente(cliente);
+        pedido.setUsuario(usuario);
         pedido.setValorTotal(100.00);
 
         pedidoSalvo = pedidoRepository.save(pedido);
@@ -61,7 +61,7 @@ public class PedidoControllerTest {
     @AfterEach
     void desligar(){
         pedidoRepository.deleteAll();
-        clienteRepository.deleteAll();
+        usuarioRepository.deleteAll();
         produtoRepository.deleteAll();
     }
 
@@ -88,9 +88,9 @@ public class PedidoControllerTest {
         return List.of(produtoPedidoDTO);
     }
 
-    PedidoRequestDTO pedidoRequest(List<ProdutoPedidoDTO> listaProdutos, Cliente cliente){
+    PedidoRequestDTO pedidoRequest(List<ProdutoPedidoDTO> listaProdutos, Usuario usuario){
         PedidoRequestDTO pedidoRequestDTO = new PedidoRequestDTO();
-        pedidoRequestDTO.setIdCliente(cliente.getId());
+        pedidoRequestDTO.setIdUsuario(usuario.getId());
         pedidoRequestDTO.setProdutos(listaProdutos);
         return pedidoRequestDTO;
     }
@@ -107,7 +107,7 @@ public class PedidoControllerTest {
     public void deveCriarPedido() throws Exception{
         criarProduto();
         List<ProdutoPedidoDTO> listaProdutos = produtoPedido(produtoSalvo);
-        PedidoRequestDTO pedido = pedidoRequest(listaProdutos, clienteSalvo);
+        PedidoRequestDTO pedido = pedidoRequest(listaProdutos, usuarioSalvo);
 
         String body = objectMapper.writeValueAsString(pedido);
 
@@ -120,12 +120,12 @@ public class PedidoControllerTest {
     }
 
     @Test
-    public void naoDeveCriarPedidoComClienteInexistente() throws Exception{
-        Cliente clienteInexistente = new Cliente();
-        clienteInexistente.setId(100L);
+    public void naoDeveCriarPedidoComUsuarioInexistente() throws Exception{
+        Usuario usuarioInexistente = new Usuario();
+        usuarioInexistente.setId(100L);
         criarProduto();
         List<ProdutoPedidoDTO> listaProdutos = produtoPedido(produtoSalvo);
-        PedidoRequestDTO pedido = pedidoRequest(listaProdutos, clienteInexistente);
+        PedidoRequestDTO pedido = pedidoRequest(listaProdutos, usuarioInexistente);
 
         String body = objectMapper.writeValueAsString(pedido);
 
@@ -143,7 +143,7 @@ public class PedidoControllerTest {
         produto.setId(100L);
 
         List<ProdutoPedidoDTO> listaProdutos = produtoPedido(produto);
-        PedidoRequestDTO pedido = pedidoRequest(listaProdutos, clienteSalvo);
+        PedidoRequestDTO pedido = pedidoRequest(listaProdutos, usuarioSalvo);
 
         String body = objectMapper.writeValueAsString(pedido);
 
@@ -168,7 +168,7 @@ public class PedidoControllerTest {
         produtoPedidoDTO.setQuantidade(5); // Requesting more than available
 
         List<ProdutoPedidoDTO> listaProdutos = List.of(produtoPedidoDTO);
-        PedidoRequestDTO pedido = pedidoRequest(listaProdutos, clienteSalvo);
+        PedidoRequestDTO pedido = pedidoRequest(listaProdutos, usuarioSalvo);
 
         String body = objectMapper.writeValueAsString(pedido);
 

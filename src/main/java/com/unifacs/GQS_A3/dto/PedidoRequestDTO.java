@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PedidoRequestDTO {
-    private Long idCliente;
+    private Long idUsuario;
     private List<ProdutoPedidoDTO> produtos;
 
     public static double calcularValorTotal(){

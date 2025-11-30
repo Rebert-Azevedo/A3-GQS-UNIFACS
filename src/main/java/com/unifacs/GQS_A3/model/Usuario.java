@@ -1,7 +1,18 @@
 package com.unifacs.GQS_A3.model;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name ="usuario")
 public class Usuario {
@@ -10,45 +21,18 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String nome;
-    private String senha;
+    @Column(nullable = false, unique = true)
     private String email;
-    private boolean isAdm = false;
+    @Column(nullable = false)
+    private String senha;
 
-    public Usuario(){}
+    private LocalDate dataNascimento;
 
-    public Usuario(String nome, String senha, String email){
-        this.nome = nome;
-        this.senha = senha;
-        this.email = email;
-    }
+    @CreationTimestamp
+    @Column(nullable = false)
+    private LocalDateTime dataCriacao;
 
-    public Long getId() {
-        return id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public boolean isAdm() {
-        return isAdm;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }
 

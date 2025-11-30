@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 public class PedidoResponseDTO {
     private Long id;
-    private String nomeCliente;
+    private String nomeUsuario;
     private double vlrTotal;
     private List<ProdutoPedidoDTO> produtos = new ArrayList<>();
 }

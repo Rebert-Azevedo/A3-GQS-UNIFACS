@@ -1,15 +1,15 @@
-package com.unifacs.GQS_A3.Service;
+package com.unifacs.GQS_A3.service;
 
 import com.unifacs.GQS_A3.dto.PedidoResponseDTO;
 import com.unifacs.GQS_A3.exceptions.EstoqueInsuficienteException;
 import com.unifacs.GQS_A3.exceptions.RecursoNaoEncontradoException;
-import com.unifacs.GQS_A3.model.Cliente;
+import com.unifacs.GQS_A3.model.Usuario;
 import com.unifacs.GQS_A3.model.Pedido;
 import com.unifacs.GQS_A3.model.PedidoProduto;
 import com.unifacs.GQS_A3.model.Produto;
-import com.unifacs.GQS_A3.Repository.ClienteRepository;
-import com.unifacs.GQS_A3.Repository.PedidoRepository;
-import com.unifacs.GQS_A3.Repository.ProdutoRepository;
+import com.unifacs.GQS_A3.repository.UsuarioRepository;
+import com.unifacs.GQS_A3.repository.PedidoRepository;
+import com.unifacs.GQS_A3.repository.ProdutoRepository;
 import com.unifacs.GQS_A3.dto.PedidoRequestDTO;
 import com.unifacs.GQS_A3.dto.ProdutoPedidoDTO;
 import org.springframework.stereotype.Service;
@@ -17,53 +17,52 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PedidoService {
 
     private final PedidoRepository pedidoRepository;
     private final ProdutoRepository produtoRepository;
-    private final ClienteRepository clienteRepository;
+    private final UsuarioRepository usuarioRepository;
 
 
     public PedidoService(PedidoRepository pedidoRepository,
                          ProdutoRepository produtoRepository,
-                         ClienteRepository clienteRepository) {
+                         UsuarioRepository usuarioRepository) {
         this.pedidoRepository = pedidoRepository;
         this.produtoRepository = produtoRepository;
-        this.clienteRepository = clienteRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
-    public PedidoResponseDTO criarPedido(PedidoRequestDTO pedidoDTO){
-        Cliente cliente = clienteRepository.findById(pedidoDTO.getIdCliente()).orElseThrow(()
-                -> new RecursoNaoEncontradoException("Cliente não encontrado"));
+    public PedidoResponseDTO criarPedido(PedidoRequestDTO pedidoDTO) {
+        Usuario usuario = usuarioRepository.findById(pedidoDTO.getIdUsuario()).orElseThrow(()
+                -> new RecursoNaoEncontradoException("Usuario não encontrado"));
 
         Pedido novoPedido = new Pedido();
-        novoPedido.setCliente(cliente);
+        novoPedido.setUsuario(usuario);
         novoPedido.setValorTotal(calcTotalPedido(pedidoDTO, novoPedido));
 
         pedidoRepository.save(novoPedido);
 
         PedidoResponseDTO pedidoResponse = new PedidoResponseDTO();
         pedidoResponse.setId(novoPedido.getId());
-        pedidoResponse.setNomeCliente(novoPedido.getCliente().getNome());
+        pedidoResponse.setNomeUsuario(novoPedido.getUsuario().getNome());
         pedidoResponse.setVlrTotal(novoPedido.getValorTotal());
         pedidoResponse.setProdutos(pedidoDTO.getProdutos());
 
         return pedidoResponse;
     }
 
-    public double calcTotalPedido(PedidoRequestDTO itensPedido, Pedido pedido){
+    public double calcTotalPedido(PedidoRequestDTO itensPedido, Pedido pedido) {
         List<PedidoProduto> produtos = new ArrayList<>();
         double valorTotal = 0;
 
-        for(ProdutoPedidoDTO produtoDTO: itensPedido.getProdutos()){
+        for (ProdutoPedidoDTO produtoDTO : itensPedido.getProdutos()) {
             Produto produto = produtoRepository
                     .findById(produtoDTO.getIdProduto())
                     .orElseThrow(() -> new RecursoNaoEncontradoException("Produto " + produtoDTO.getIdProduto() + " não encontrado"));
 
-            if(produto.getEstoque() < produtoDTO.getQuantidade()){
+            if (produto.getEstoque() < produtoDTO.getQuantidade()) {
                 throw new EstoqueInsuficienteException("Estoque insuficiente para o produto: " + produto.getNome());
             }
             produto.setEstoque(produto.getEstoque() - produtoDTO.getQuantidade());
@@ -83,16 +82,16 @@ public class PedidoService {
         return valorTotal;
     }
 
-    public List<Pedido> listarPedidos(){
+    public List<Pedido> listarPedidos() {
         return pedidoRepository.findAll();
     }
 
-    public void deletarPedido(Long id){
+    public void deletarPedido(Long id) {
         pedidoRepository.deleteById(id);
     }
 
     public Pedido buscarPedido(Long id) {
         return pedidoRepository.findById(id).
-                orElseThrow(() -> new RecursoNaoEncontradoException("Pedido: " +id+ " não encontrado"));
+                orElseThrow(() -> new RecursoNaoEncontradoException("Pedido: " + id + " não encontrado"));
     }
 }

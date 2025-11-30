@@ -1,12 +1,11 @@
-package com.unifacs.GQS_A3.Service;
+package com.unifacs.GQS_A3.service;
 
-import com.unifacs.GQS_A3.Repository.FuncionarioRepository;
+import com.unifacs.GQS_A3.repository.FuncionarioRepository;
 import com.unifacs.GQS_A3.exceptions.RecursoNaoEncontradoException;
 import com.unifacs.GQS_A3.model.Funcionario;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class FuncionarioService {

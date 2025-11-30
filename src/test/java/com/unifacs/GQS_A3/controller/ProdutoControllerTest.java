@@ -1,7 +1,7 @@
 package com.unifacs.GQS_A3.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.unifacs.GQS_A3.Repository.ProdutoRepository;
+import com.unifacs.GQS_A3.repository.ProdutoRepository;
 import com.unifacs.GQS_A3.model.Produto;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
