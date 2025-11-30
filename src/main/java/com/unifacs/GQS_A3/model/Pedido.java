@@ -25,7 +25,7 @@ public class Pedido {
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     @JsonIgnoreProperties("pedidos")
-    private Cliente cliente;
+    private Usuario usuario;
 
     @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("pedido")

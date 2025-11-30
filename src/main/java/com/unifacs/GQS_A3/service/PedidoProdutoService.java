@@ -1,6 +1,6 @@
-package com.unifacs.GQS_A3.Service;
+package com.unifacs.GQS_A3.service;
 
-import com.unifacs.GQS_A3.Repository.PedidoProdutoRepository;
+import com.unifacs.GQS_A3.repository.PedidoProdutoRepository;
 import com.unifacs.GQS_A3.model.PedidoProduto;
 
 import org.springframework.stereotype.Service;

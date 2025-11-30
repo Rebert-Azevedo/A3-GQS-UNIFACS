@@ -1,18 +1,18 @@
-package com.unifacs.GQS_A3.Controller;
+package com.unifacs.GQS_A3.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.unifacs.GQS_A3.Service.ClienteService;
-import com.unifacs.GQS_A3.Service.PedidoService;
-import com.unifacs.GQS_A3.Service.ProdutoService;
+import com.unifacs.GQS_A3.service.UsuarioService;
+import com.unifacs.GQS_A3.service.PedidoService;
+import com.unifacs.GQS_A3.service.ProdutoService;
 import com.unifacs.GQS_A3.model.Pedido;
 import com.unifacs.GQS_A3.model.PedidoProduto;
 import com.unifacs.GQS_A3.dto.PedidoRequestDTO;
 import com.unifacs.GQS_A3.dto.PedidoResponseDTO;
 import com.unifacs.GQS_A3.dto.ProdutoPedidoDTO;
-import com.unifacs.GQS_A3.Service.PedidoProdutoService;
+import com.unifacs.GQS_A3.service.PedidoProdutoService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,17 +22,17 @@ import java.util.function.Function;
 @RequestMapping("/api/pedidos")
 public class PedidoController {
     public final PedidoService pedidoService;
-    public final ClienteService clienteService;
+    public final UsuarioService usuarioService;
     public final ProdutoService produtoService;
     public final PedidoProdutoService pedidoProdutoService;
 
     public PedidoController(PedidoService pedidoService,
-                            ClienteService clienteService,
+                            UsuarioService usuarioService,
                             ProdutoService produtoService,
                             PedidoProdutoService pedidoProdutoService) {
 
         this.pedidoService = pedidoService;
-        this.clienteService = clienteService;
+        this.usuarioService = usuarioService;
         this.produtoService = produtoService;
         this.pedidoProdutoService = pedidoProdutoService;
     }
@@ -59,7 +59,7 @@ public class PedidoController {
         Pedido pedido = pedidoService.buscarPedido(id);
         PedidoResponseDTO pedidoResponse = new PedidoResponseDTO();
         pedidoResponse.setId(pedido.getId());
-        pedidoResponse.setNomeCliente(pedido.getCliente().getNome());
+        pedidoResponse.setNomeUsuario(pedido.getUsuario().getNome());
         pedidoResponse.setVlrTotal(pedido.getValorTotal());
         pedidoResponse.setProdutos(listaProdutos.apply(pedido.getPedidoProduto()));
 

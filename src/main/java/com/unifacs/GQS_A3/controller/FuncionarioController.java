@@ -1,6 +1,6 @@
-package com.unifacs.GQS_A3.Controller;
+package com.unifacs.GQS_A3.controller;
 
-import com.unifacs.GQS_A3.Service.FuncionarioService;
+import com.unifacs.GQS_A3.service.FuncionarioService;
 import com.unifacs.GQS_A3.model.Funcionario;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

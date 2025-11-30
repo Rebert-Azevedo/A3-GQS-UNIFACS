@@ -1,6 +1,6 @@
-package com.unifacs.GQS_A3.Controller;
+package com.unifacs.GQS_A3.controller;
 
-import com.unifacs.GQS_A3.Service.ProdutoService;
+import com.unifacs.GQS_A3.service.ProdutoService;
 import com.unifacs.GQS_A3.model.Produto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
