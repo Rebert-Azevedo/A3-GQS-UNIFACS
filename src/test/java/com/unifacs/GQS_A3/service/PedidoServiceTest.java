@@ -1,15 +1,15 @@
-package com.unifacs.GQS_A3.Service;
+package com.unifacs.GQS_A3.service;
 
 
-import com.unifacs.GQS_A3.Repository.ClienteRepository;
-import com.unifacs.GQS_A3.Repository.PedidoRepository;
-import com.unifacs.GQS_A3.Repository.ProdutoRepository;
+import com.unifacs.GQS_A3.model.Usuario;
+import com.unifacs.GQS_A3.repository.UsuarioRepository;
+import com.unifacs.GQS_A3.repository.PedidoRepository;
+import com.unifacs.GQS_A3.repository.ProdutoRepository;
 import com.unifacs.GQS_A3.dto.PedidoRequestDTO;
 import com.unifacs.GQS_A3.dto.PedidoResponseDTO;
 import com.unifacs.GQS_A3.dto.ProdutoPedidoDTO;
 import com.unifacs.GQS_A3.exceptions.EstoqueInsuficienteException;
 import com.unifacs.GQS_A3.exceptions.RecursoNaoEncontradoException;
-import com.unifacs.GQS_A3.model.Cliente;
 import com.unifacs.GQS_A3.model.Pedido;
 import com.unifacs.GQS_A3.model.Produto;
 import org.junit.jupiter.api.Assertions;
@@ -27,7 +27,7 @@ import java.util.Optional;
 @ExtendWith(MockitoExtension.class)
 public class PedidoServiceTest {
     @Mock
-    private ClienteRepository clienteRepository;
+    private UsuarioRepository usuarioRepository;
 
     @Mock
     private ProdutoRepository produtoRepository;
@@ -40,11 +40,11 @@ public class PedidoServiceTest {
 
     @Test
     public void deveCriarPedido(){
-        Cliente cliente = new Cliente();
-        cliente.setId(1L);
-        cliente.setNome("Cliente de teste");
-        cliente.setEmail("cliente@teste.com");
-        cliente.setSenha("senha");
+        Usuario usuario = new Usuario();
+        usuario.setId(1L);
+        usuario.setNome("Usuario de teste");
+        usuario.setEmail("usuario@teste.com");
+        usuario.setSenha("senha");
 
         Produto produto = new Produto();
         produto.setId(1L);
@@ -58,14 +58,14 @@ public class PedidoServiceTest {
         List<ProdutoPedidoDTO> listaProdutosDePedido = List.of(produtoPedido);
 
         PedidoRequestDTO pedidoRequest = new PedidoRequestDTO();
-        pedidoRequest.setIdCliente(cliente.getId());
+        pedidoRequest.setIdUsuario(usuario.getId());
         pedidoRequest.setProdutos(listaProdutosDePedido);
 
         Pedido pedido = new Pedido();
         pedido.setId(1L);
-        pedido.setCliente(cliente);
+        pedido.setUsuario(usuario);
 
-        Mockito.when(clienteRepository.findById(1L)).thenReturn(Optional.of(cliente));
+        Mockito.when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuario));
         Mockito.when(produtoRepository.findById(1L)).thenReturn(Optional.of(produto));
         Mockito.when(produtoRepository.save(Mockito.any(Produto.class))).thenReturn(produto);
         Mockito.when(pedidoRepository.save(Mockito.any(Pedido.class))).thenAnswer(invocation -> {
@@ -78,44 +78,44 @@ public class PedidoServiceTest {
 
         Assertions.assertNotNull(pedidoResponse);
         Assertions.assertEquals(1L, pedidoResponse.getId());
-        Assertions.assertEquals("Cliente de teste", pedidoResponse.getNomeCliente());
+        Assertions.assertEquals("Usuario de teste", pedidoResponse.getNomeUsuario());
         Assertions.assertEquals(9.0, pedidoResponse.getVlrTotal());
         Assertions.assertEquals(1, pedidoResponse.getProdutos().size());
     }
 
     @Test
-    public void naoDeveCriarPedidoSemCliente(){
+    public void naoDeveCriarPedidoSemUsuario(){
         PedidoRequestDTO pedidoRequest = new PedidoRequestDTO();
         Assertions.assertThrows(RecursoNaoEncontradoException.class, () -> pedidoService.criarPedido(pedidoRequest));
     }
 
     @Test
     public void naoDeveCriarPedidoSemProduto(){
-        Cliente cliente = new Cliente();
-        cliente.setId(1L);
-        cliente.setNome("Cliente de teste");
-        cliente.setEmail("cliente@teste.com");
-        cliente.setSenha("senha");
+        Usuario usuario = new Usuario();
+        usuario.setId(1L);
+        usuario.setNome("Usuario de teste");
+        usuario.setEmail("usuario@teste.com");
+        usuario.setSenha("senha");
 
         PedidoRequestDTO pedidoRequest = new PedidoRequestDTO();
-        pedidoRequest.setIdCliente(cliente.getId());
+        pedidoRequest.setIdUsuario(usuario.getId());
         Assertions.assertThrows(RecursoNaoEncontradoException.class, () -> pedidoService.criarPedido(pedidoRequest));
     }
 
     @Test
     public void deveListarPedidos(){
-        Cliente cliente = new Cliente();
-        cliente.setId(1L);
-        cliente.setNome("Cliente de teste");
-        cliente.setEmail("cliente@teste.com");
-        cliente.setSenha("senha");
+        Usuario usuario = new Usuario();
+        usuario.setId(1L);
+        usuario.setNome("Usuario de teste");
+        usuario.setEmail("usuario@teste.com");
+        usuario.setSenha("senha");
 
         Pedido pedido1 = new Pedido();
-        pedido1.setCliente(cliente);
+        pedido1.setUsuario(usuario);
         pedido1.setValorTotal(10.0);
 
         Pedido pedido2 = new Pedido();
-        pedido2.setCliente(cliente);
+        pedido2.setUsuario(usuario);
         pedido2.setValorTotal(15.0);
 
         List<Pedido> listaPedidos = Arrays.asList(pedido1, pedido2);
@@ -124,22 +124,22 @@ public class PedidoServiceTest {
 
         List<Pedido> listaRetornada = pedidoService.listarPedidos();
         Assertions.assertEquals(2, listaRetornada.size());
-        Assertions.assertEquals(1L, listaRetornada.get(0).getCliente().getId());
+        Assertions.assertEquals(1L, listaRetornada.get(0).getUsuario().getId());
         Assertions.assertEquals(10.0, listaRetornada.get(0).getValorTotal());
         Assertions.assertEquals(15.0, listaRetornada.get(1).getValorTotal());
     }
 
     @Test
     public void deveEncontrarPedidoPorId(){
-        Cliente cliente = new Cliente();
-        cliente.setId(1L);
-        cliente.setNome("Cliente de teste");
-        cliente.setEmail("cliente@teste.com");
-        cliente.setSenha("senha");
+        Usuario usuario = new Usuario();
+        usuario.setId(1L);
+        usuario.setNome("Usuario de teste");
+        usuario.setEmail("usuario@teste.com");
+        usuario.setSenha("senha");
 
         Pedido pedido = new Pedido();
         pedido.setId(1L);
-        pedido.setCliente(cliente);
+        pedido.setUsuario(usuario);
         pedido.setValorTotal(10.0);
 
         Mockito.when(pedidoRepository.findById(1L)).thenReturn(Optional.of(pedido));
@@ -155,11 +155,11 @@ public class PedidoServiceTest {
 
     @Test
     public void deveCalcularTotalDoPedido(){
-        Cliente cliente = new Cliente();
-        cliente.setId(1L);
-        cliente.setNome("Cliente de teste");
-        cliente.setEmail("cliente@teste.com");
-        cliente.setSenha("senha");
+        Usuario usuario = new Usuario();
+        usuario.setId(1L);
+        usuario.setNome("Usuario de teste");
+        usuario.setEmail("usuario@teste.com");
+        usuario.setSenha("senha");
 
         Produto produto = new Produto();
         produto.setId(1L);
@@ -173,12 +173,12 @@ public class PedidoServiceTest {
         List<ProdutoPedidoDTO> listaProdutosDePedido = List.of(produtoPedido);
 
         PedidoRequestDTO pedidoRequest = new PedidoRequestDTO();
-        pedidoRequest.setIdCliente(cliente.getId());
+        pedidoRequest.setIdUsuario(usuario.getId());
         pedidoRequest.setProdutos(listaProdutosDePedido);
 
         Pedido pedido = new Pedido();
         pedido.setId(1L);
-        pedido.setCliente(cliente);
+        pedido.setUsuario(usuario);
 
         Mockito.when(produtoRepository.findById(1L)).thenReturn(Optional.of(produto));
 
@@ -188,30 +188,30 @@ public class PedidoServiceTest {
 
     @Test
     public void naoDeveCalcularTotalPedido(){
-        Cliente cliente = new Cliente();
-        cliente.setId(1L);
-        cliente.setNome("Cliente de teste");
-        cliente.setEmail("cliente@teste.com");
-        cliente.setSenha("senha");
+        Usuario usuario = new Usuario();
+        usuario.setId(1L);
+        usuario.setNome("Usuario de teste");
+        usuario.setEmail("usuario@teste.com");
+        usuario.setSenha("senha");
 
         ProdutoPedidoDTO produtoPedido = new ProdutoPedidoDTO();
         produtoPedido.setQuantidade(3);
         List<ProdutoPedidoDTO> listaProdutosDePedido = List.of(produtoPedido);
 
         PedidoRequestDTO pedidoRequest = new PedidoRequestDTO();
-        pedidoRequest.setIdCliente(cliente.getId());
+        pedidoRequest.setIdUsuario(usuario.getId());
         pedidoRequest.setProdutos(listaProdutosDePedido);
 
         Pedido pedido = new Pedido();
         pedido.setId(1L);
-        pedido.setCliente(cliente);
+        pedido.setUsuario(usuario);
 
         Assertions.assertThrows(RecursoNaoEncontradoException.class, () -> pedidoService.calcTotalPedido(pedidoRequest, pedido));
     }
     @Test
     public void naoDeveCalcularProdutoSemEstoque(){
-        Cliente cliente = new Cliente();
-        cliente.setId(1L);
+        Usuario usuario = new Usuario();
+        usuario.setId(1L);
 
         Produto produto = new Produto();
         produto.setId(1L);
@@ -224,12 +224,12 @@ public class PedidoServiceTest {
         List<ProdutoPedidoDTO> listaProdutosDePedido = List.of(produtoPedido);
 
         PedidoRequestDTO pedidoRequest = new PedidoRequestDTO();
-        pedidoRequest.setIdCliente(cliente.getId());
+        pedidoRequest.setIdUsuario(usuario.getId());
         pedidoRequest.setProdutos(listaProdutosDePedido);
 
         Pedido pedido = new Pedido();
         pedido.setId(1L);
-        pedido.setCliente(cliente);
+        pedido.setUsuario(usuario);
 
         Mockito.when(produtoRepository.findById(1L)).thenReturn(Optional.of(produto));
 

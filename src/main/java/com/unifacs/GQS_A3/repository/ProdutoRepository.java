@@ -1,4 +1,4 @@
-package com.unifacs.GQS_A3.Repository;
+package com.unifacs.GQS_A3.repository;
 
 import com.unifacs.GQS_A3.model.Produto;
 import org.springframework.data.jpa.repository.JpaRepository;

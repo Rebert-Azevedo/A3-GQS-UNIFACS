@@ -1,6 +1,6 @@
-package com.unifacs.GQS_A3.Service;
+package com.unifacs.GQS_A3.service;
 
-import com.unifacs.GQS_A3.Repository.ProdutoRepository;
+import com.unifacs.GQS_A3.repository.ProdutoRepository;
 import com.unifacs.GQS_A3.exceptions.CampoNaoPreenchidoException;
 import com.unifacs.GQS_A3.exceptions.RecursoNaoEncontradoException;
 import com.unifacs.GQS_A3.model.Produto;
