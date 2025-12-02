@@ -1,5 +1,7 @@
 package com.unifacs.GQS_A3.service;
 
+import com.unifacs.GQS_A3.dto.users.ModificarUsuarioDTO;
+import com.unifacs.GQS_A3.dto.users.ResponseUserDTO;
 import com.unifacs.GQS_A3.model.Usuario;
 import com.unifacs.GQS_A3.repository.UsuarioRepository;
 import com.unifacs.GQS_A3.exceptions.CampoNaoPreenchidoException;
@@ -25,9 +27,11 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
-    public Usuario buscarPorId(Long id) {
-        return usuarioRepository.findById(id).
+    public ResponseUserDTO buscarPorId(Long id) {
+        Usuario user = usuarioRepository.findById(id).
                 orElseThrow(() -> new RecursoNaoEncontradoException("Usuario com id " + id + " não encontrado"));
+
+        return new ResponseUserDTO(user.getNome(), user.getEmail(), user.getDataNascimento());
     }
 
     public Usuario registrarUsuario(Usuario usuario) {
@@ -51,7 +55,7 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
-    public Usuario editarUsuario(Long id, Usuario alterUsuario) {
+    public ModificarUsuarioDTO editarUsuario(Long id, ModificarUsuarioDTO alterUsuario) {
         Usuario usuario = usuarioRepository
                 .findById(id)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Usuario com id " + id + " não encontrado"));
@@ -60,7 +64,11 @@ public class UsuarioService {
         usuario.setSenha(alterUsuario.getSenha() != null ? alterUsuario.getSenha() : usuario.getSenha());
         usuario.setEmail(alterUsuario.getEmail() != null ? alterUsuario.getEmail() : usuario.getEmail());
         usuario.setDataNascimento(alterUsuario.getDataNascimento() != null ? alterUsuario.getDataNascimento() : usuario.getDataNascimento());
-        return usuarioRepository.save(usuario);
+        Usuario usuarioModificado = usuarioRepository.save(usuario);
+        return new ModificarUsuarioDTO(usuarioModificado.getNome(),
+                usuarioModificado.getEmail(),
+                usuarioModificado.getSenha(),
+                usuarioModificado.getDataNascimento());
     }
 
     public Boolean verificarEmailExistente(String email) {

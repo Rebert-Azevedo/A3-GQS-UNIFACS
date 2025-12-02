@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -42,6 +43,8 @@ public class PedidoControllerTest {
     ProdutoRepository produtoRepository;
     private Produto produtoSalvo;
 
+    ObjectMapper objectMapper;
+
     @BeforeEach
     void inicializar(){
         Usuario usuario = new Usuario();
@@ -64,8 +67,6 @@ public class PedidoControllerTest {
         usuarioRepository.deleteAll();
         produtoRepository.deleteAll();
     }
-
-    ObjectMapper objectMapper;
 
     @BeforeEach
     void mapper(){
@@ -97,13 +98,15 @@ public class PedidoControllerTest {
 
 
     @Test
+    @WithMockUser(username = "admin@admin.com", roles = {"USER", "ADMIN"})
     public void deveListarTodosOsPedidos() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/pedidos"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/pedidos/user"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print());
     }
 
     @Test
+    @WithMockUser(username = "user@user.com", roles = "USER")
     public void deveCriarPedido() throws Exception{
         criarProduto();
         List<ProdutoPedidoDTO> listaProdutos = produtoPedido(produtoSalvo);
@@ -111,7 +114,7 @@ public class PedidoControllerTest {
 
         String body = objectMapper.writeValueAsString(pedido);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/pedidos")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/pedidos/user")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(body)
                 )
@@ -120,6 +123,7 @@ public class PedidoControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin@admin.com", roles = {"USER", "ADMIN"})
     public void naoDeveCriarPedidoComUsuarioInexistente() throws Exception{
         Usuario usuarioInexistente = new Usuario();
         usuarioInexistente.setId(100L);
@@ -129,7 +133,7 @@ public class PedidoControllerTest {
 
         String body = objectMapper.writeValueAsString(pedido);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/pedidos")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/pedidos/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body)
                 )
@@ -138,6 +142,7 @@ public class PedidoControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user@user.com", roles = "USER")
     public void naoDeveCriarPedidoComProdutoInexistente() throws Exception{
         Produto produto = new Produto();
         produto.setId(100L);
@@ -147,7 +152,7 @@ public class PedidoControllerTest {
 
         String body = objectMapper.writeValueAsString(pedido);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/pedidos")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/pedidos/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body)
                 )
@@ -156,6 +161,7 @@ public class PedidoControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "user@user.com", roles = "USER")
     public void naoDeveCriarPedidoComEstoqueInsuficiente() throws Exception{
         Produto produto = new Produto();
         produto.setNome("Produto com estoque baixo");
@@ -172,7 +178,7 @@ public class PedidoControllerTest {
 
         String body = objectMapper.writeValueAsString(pedido);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/pedidos")
+        mockMvc.perform(MockMvcRequestBuilders.post("/api/pedidos/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(body)
                 )
@@ -182,16 +188,18 @@ public class PedidoControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "admin@admin.com", roles = {"USER", "ADMIN"})
     public void deveEncontrarPedido() throws Exception{
         Long idPedidoAtual = pedidoSalvo.getId();
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/pedidos/"+idPedidoAtual))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/pedidos/user/"+idPedidoAtual))
                 .andExpect(MockMvcResultMatchers.status().isAccepted())
                 .andDo(MockMvcResultHandlers.print());
     }
 
     @Test
+    @WithMockUser(username = "admin@admin.com", roles = {"USER", "ADMIN"})
     public void naoDeveEncontrarPedidoInexistente() throws Exception{
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/pedidos/25"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/pedidos/user/25"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andDo(MockMvcResultHandlers.print());
     }

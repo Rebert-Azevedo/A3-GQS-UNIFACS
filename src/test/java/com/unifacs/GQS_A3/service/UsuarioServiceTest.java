@@ -1,5 +1,7 @@
 package com.unifacs.GQS_A3.service;
 
+import com.unifacs.GQS_A3.dto.users.ModificarUsuarioDTO;
+import com.unifacs.GQS_A3.dto.users.ResponseUserDTO;
 import com.unifacs.GQS_A3.model.Usuario;
 import com.unifacs.GQS_A3.repository.UsuarioRepository;
 import com.unifacs.GQS_A3.exceptions.CampoNaoPreenchidoException;
@@ -11,6 +13,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,9 +24,11 @@ public class UsuarioServiceTest {
 
     @Mock
     private UsuarioRepository usuarioRepository;
-
+    @Mock
+    private PasswordEncoder passwordEncoder;
     @InjectMocks
     private UsuarioService usuarioService;
+
 
     @Test
     public void deveRegistrarUmNovoUsuario(){
@@ -32,13 +37,14 @@ public class UsuarioServiceTest {
         usuario.setEmail("usuario@usuario.com");
         usuario.setSenha("usuarioSenha");
 
+        Mockito.when(passwordEncoder.encode("usuarioSenha")).thenReturn("SenhaCriptografada");
         Mockito.when(usuarioRepository.save(usuario)).thenReturn(usuario);
 
         Usuario novoUsuario = usuarioService.registrarUsuario(usuario);
         Assertions.assertNotNull(novoUsuario);
         Assertions.assertEquals(usuario.getNome(), novoUsuario.getNome());
         Assertions.assertEquals(usuario.getEmail(), novoUsuario.getEmail());
-        Assertions.assertEquals(usuario.getSenha(), novoUsuario.getSenha());
+        Assertions.assertEquals("SenhaCriptografada", novoUsuario.getSenha());
     }
 
     @Test
@@ -82,10 +88,10 @@ public class UsuarioServiceTest {
 
         Mockito.when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuario));
 
-        Usuario usuarioBuscado = usuarioService.buscarPorId(1L);
+        ResponseUserDTO usuarioBuscado = usuarioService.buscarPorId(1L);
         Assertions.assertNotNull(usuarioBuscado);
-        Assertions.assertEquals(usuario.getId(), usuarioBuscado.getId());
-        Assertions.assertEquals(usuario.getNome(), usuarioBuscado.getNome());
+        Assertions.assertEquals(usuario.getNome(), usuarioBuscado.nome());
+        Assertions.assertEquals(usuario.getEmail(), usuarioBuscado.email());
     }
 
     @Test
@@ -104,13 +110,12 @@ public class UsuarioServiceTest {
         Mockito.when(usuarioRepository.save(usuario)).thenReturn(usuario);
         Mockito.when(usuarioRepository.findById(1L)).thenReturn(Optional.of(usuario));
 
-        Usuario usuarioModificado = new Usuario();
-        usuarioModificado.setId(1L);
+        ModificarUsuarioDTO usuarioModificado = new ModificarUsuarioDTO();
         usuarioModificado.setNome("usuarioModificado");
         usuarioModificado.setEmail("usuarioModificado@usuario.com");
         usuarioModificado.setSenha("usuarioSenha");
 
-        Usuario usuarioAlterado = usuarioService.editarUsuario(1L, usuarioModificado);
+        ModificarUsuarioDTO usuarioAlterado = usuarioService.editarUsuario(1L, usuarioModificado);
 
         Assertions.assertEquals(usuarioModificado.getNome(), usuarioAlterado.getNome());
         Assertions.assertEquals(usuarioModificado.getEmail(), usuarioAlterado.getEmail());
@@ -118,8 +123,7 @@ public class UsuarioServiceTest {
 
     @Test
     public void naoDeveModificarUmUsuario(){
-        Usuario usuarioModificado = new Usuario();
-        usuarioModificado.setId(1L);
+        ModificarUsuarioDTO usuarioModificado = new ModificarUsuarioDTO();
         usuarioModificado.setNome("usuarioModificado");
         usuarioModificado.setEmail("usuarioModificado@usuario.com");
         usuarioModificado.setSenha("usuarioSenha");
