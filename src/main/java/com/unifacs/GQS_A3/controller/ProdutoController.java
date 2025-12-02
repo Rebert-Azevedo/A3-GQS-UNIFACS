@@ -18,23 +18,23 @@ public class ProdutoController {
         this.produtoService = produtoService;
     }
 
-    @PostMapping
+    @PostMapping("/admin/registrar")
     public ResponseEntity<Produto> adicionarProduto(@RequestBody Produto produto){
         Produto novoProduto = produtoService.adicionarProduto(produto);
         return new ResponseEntity<>(novoProduto, HttpStatus.CREATED);
     }
 
-    @PutMapping({"/{id}"})
+    @PutMapping({"/admin/editar/{id}"})
     public ResponseEntity<Produto> editarProduto(@PathVariable Long id, @RequestBody Produto produto){
         Produto updatedProduto = produtoService.editarProduto(id, produto);
         return new ResponseEntity<>(updatedProduto, HttpStatus.OK);
     }
-    @GetMapping
+    @GetMapping("/public")
     public ResponseEntity<List<Produto>> listarProdutos(){
         return new ResponseEntity<>(produtoService.listarProdutos(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/public/{id}")
     public ResponseEntity<Produto> buscarProduto(@PathVariable Long id){
         Produto produto = produtoService.buscarProdutoPorId(id);
         return new ResponseEntity<>(produto, HttpStatus.OK);

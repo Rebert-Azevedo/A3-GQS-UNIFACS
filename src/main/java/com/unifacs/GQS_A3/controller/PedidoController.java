@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.function.Function;
 
 @RestController
-@RequestMapping("/api/pedidos")
+@RequestMapping("/api/pedidos/user")
 public class PedidoController {
     public final PedidoService pedidoService;
     public final UsuarioService usuarioService;
