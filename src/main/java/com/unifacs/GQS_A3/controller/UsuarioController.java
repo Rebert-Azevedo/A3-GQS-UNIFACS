@@ -1,5 +1,7 @@
 package com.unifacs.GQS_A3.controller;
 
+import com.unifacs.GQS_A3.dto.users.ModificarUsuarioDTO;
+import com.unifacs.GQS_A3.dto.users.ResponseUserDTO;
 import com.unifacs.GQS_A3.model.Usuario;
 import com.unifacs.GQS_A3.service.UsuarioService;
 import org.springframework.http.HttpStatus;
@@ -23,8 +25,8 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> buscarUsuario(@PathVariable Long id) {
-        Usuario usuario = usuarioService.buscarPorId(id);
+    public ResponseEntity<ResponseUserDTO> buscarUsuario(@PathVariable Long id) {
+        ResponseUserDTO usuario = usuarioService.buscarPorId(id);
         return new ResponseEntity<>(usuario, HttpStatus.OK);
     }
 
@@ -35,9 +37,12 @@ public class UsuarioController {
     }
 
     @PutMapping({"/editar/{id}"})
-    public ResponseEntity<Usuario> editarUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
-        Usuario updatedUsuario = usuarioService.editarUsuario(id, usuario);
-        return new ResponseEntity<>(updatedUsuario, HttpStatus.OK);
+    public ResponseEntity<ResponseUserDTO> editarUsuario(@PathVariable Long id, @RequestBody ModificarUsuarioDTO usuario) {
+        ModificarUsuarioDTO updatedUsuario = usuarioService.editarUsuario(id, usuario);
+        return new ResponseEntity<>(new ResponseUserDTO(updatedUsuario.getNome(),
+                updatedUsuario.getEmail(),
+                updatedUsuario.getDataNascimento()),
+                HttpStatus.OK);
     }
 
 }

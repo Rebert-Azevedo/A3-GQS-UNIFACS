@@ -67,7 +67,7 @@ public class AuthenticatorController {
     public ResponseEntity<AuthResponseDTO> login(@RequestBody AuthenticationDTO login) {
 
         Usuario usuario = this.usuarioRepository.findByEmailAddress(login.email());
-        if (passwordEncoder.matches(login.senha(), usuario.getSenha())) {
+        if (usuario != null && passwordEncoder.matches(login.senha(), usuario.getSenha())) {
             String token = this.tokenService.generateToken(usuario);
 
             return new ResponseEntity<>(new AuthResponseDTO(usuario.getNome(), token), HttpStatus.OK);

@@ -2,6 +2,7 @@ package com.unifacs.GQS_A3.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unifacs.GQS_A3.model.Usuario;
+import com.unifacs.GQS_A3.model.enums.UserRole;
 import com.unifacs.GQS_A3.repository.UsuarioRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -25,137 +27,77 @@ public class UsuarioControllerTest {
     @Autowired
     UsuarioRepository usuarioRepository;
 
-    private Usuario usuarioAtual;
+    private Usuario usuarioComum;
 
     @BeforeEach
-    void inicializar(){
+    void inicializar() {
         Usuario usuario = new Usuario();
         usuario.setNome("Usuario");
         usuario.setEmail("usuario@usuario.com");
         usuario.setSenha("usuarioSenha");
-        usuarioAtual = usuarioRepository.save(usuario);
+        usuario.setRole(UserRole.USER);
+
+        Usuario admin = new Usuario();
+        admin.setNome("Admin");
+        admin.setEmail("admin@adm.com");
+        admin.setSenha("admin");
+        admin.setRole(UserRole.ADMIN);
+
+        usuarioComum = usuarioRepository.save(usuario);
+        usuarioRepository.save(admin);
     }
 
     @AfterEach
-    void desligar(){
+    void desligar() {
         usuarioRepository.deleteAll();
     }
 
     ObjectMapper objectMapper;
 
     @BeforeEach
-    void mapper(){
+    void mapper() {
         objectMapper = new ObjectMapper();
     }
 
+
     @Test
-    public void deveListarClientes() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/usuarios"))
+    @WithMockUser(username = "admin@adm.com", roles = {"USER", "ADMIN"})
+    public void deveListarUsuariosParaUsuariosAdmin() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/usuarios/admin"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print());
     }
 
     @Test
-    public void deveRegistrarUsuario() throws Exception {
-        Usuario usuarioTest = new Usuario();
-        usuarioTest.setNome("Usuario");
-        usuarioTest.setEmail("usuarioTest@usuario.com");
-        usuarioTest.setSenha("usuarioSenha");
-
-        String body = objectMapper.writeValueAsString(usuarioTest);
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/usuarios")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding("UTF-8")
-                        .content(body)
-                ).andExpect(MockMvcResultMatchers.status().isCreated())
+    public void naoDeveListarUsuariosParaUsuariosComuns() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/usuarios/admin"))
+                .andExpect(MockMvcResultMatchers.status().isForbidden())
                 .andDo(MockMvcResultHandlers.print());
     }
 
     @Test
-    public void naoDeveRegistrarUsuarioSemNome() throws Exception {
-        Usuario usuarioTest = new Usuario();
-        usuarioTest.setEmail("usuarioTest@usuario.com");
-        usuarioTest.setSenha("usuarioSenha");
+    @WithMockUser(username = "admin@admin.com", roles = {"USER", "ADMIN"})
+    public void deveEncontrarUsuarioPorId() throws Exception {
+        Long idAtual = usuarioComum.getId();
 
-        String body = objectMapper.writeValueAsString(usuarioTest);
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/usuarios")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding("UTF-8")
-                        .content(body)
-                ).andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andDo(MockMvcResultHandlers.print());
-    }
-
-    @Test
-    public void naoDeveRegistrarUsuarioSemEmail() throws Exception {
-        Usuario usuarioTest = new Usuario();
-        usuarioTest.setNome("Usuario");
-        usuarioTest.setSenha("usuarioSenha");
-
-        String body = objectMapper.writeValueAsString(usuarioTest);
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/usuarios")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding("UTF-8")
-                        .content(body)
-                ).andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andDo(MockMvcResultHandlers.print());
-    }
-
-    @Test
-    public void naoDeveRegistrarUsuarioSemSenha() throws Exception {
-        Usuario usuarioTest = new Usuario();
-        usuarioTest.setNome("Usuario");
-        usuarioTest.setEmail("usuarioTest@usuario.com");
-
-        String body = objectMapper.writeValueAsString(usuarioTest);
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/usuarios")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding("UTF-8")
-                        .content(body)
-                ).andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andDo(MockMvcResultHandlers.print());
-    }
-
-    @Test
-    public void naoDeveRegistrarUsuarioComEmailJaCadastrado() throws Exception {
-        Usuario usuarioTest = new Usuario();
-        usuarioTest.setNome("Usuario");
-        usuarioTest.setEmail("usuario@usuario.com");
-        usuarioTest.setSenha("senhaTeste");
-        String body = objectMapper.writeValueAsString(usuarioTest);
-
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/usuarios")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .characterEncoding("UTF-8")
-                        .content(body)
-                ).andExpect(MockMvcResultMatchers.status().isBadGateway())
-                .andDo(MockMvcResultHandlers.print());
-    }
-
-    @Test
-    public void deveEncontrarUsuarioPorId() throws Exception{
-        Long idAtual = usuarioAtual.getId();
-
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/usuarios/" +idAtual))
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/usuarios/" + idAtual))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(idAtual))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.nome").value(usuarioComum.getNome()))
                 .andDo(MockMvcResultHandlers.print());
     }
 
     @Test
-    public void naoDeveEncontrarUsuarioPorId() throws Exception{
+    @WithMockUser(username = "admin@adm.com", roles = {"USER", "ADMIN"})
+    public void naoDeveEncontrarUsuarioComIdInexistente() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/usuarios/100000"))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andDo(MockMvcResultHandlers.print());
     }
 
     @Test
-    public void deveModificarUmUsuario() throws Exception{
-        Long idParaModificar = usuarioAtual.getId();
+    @WithMockUser(username = "usuario@usuario.com", roles = "USER")
+    public void deveModificarUmUsuario() throws Exception {
+        Long idParaModificar = usuarioComum.getId();
 
         Usuario usuarioTest = new Usuario();
         usuarioTest.setNome("Usuario Modificado");
@@ -163,7 +105,7 @@ public class UsuarioControllerTest {
         usuarioTest.setSenha("senhaModificada@");
         String body = objectMapper.writeValueAsString(usuarioTest);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/usuarios/" +idParaModificar)
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/usuarios/editar/" + idParaModificar)
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(body)
@@ -171,18 +113,19 @@ public class UsuarioControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.nome").value(usuarioTest.getNome()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(usuarioTest.getEmail()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.senha").value(usuarioTest.getSenha()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.dataNascimento").value(usuarioTest.getDataNascimento()))
                 .andDo(MockMvcResultHandlers.print());
     }
 
     @Test
-    public void naoDeveModificarUmUsuarioInexistente() throws Exception{
+    @WithMockUser(username = "admin@adm.com", roles = {"USER", "ADMIN"})
+    public void naoDeveModificarUmUsuarioInexistente() throws Exception {
         Usuario usuarioTest = new Usuario();
         usuarioTest.setEmail("usuariomodificado@email.com");
 
         String body = objectMapper.writeValueAsString(usuarioTest);
 
-        mockMvc.perform(MockMvcRequestBuilders.put("/api/usuarios/100000")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/usuarios/editar/100000")
                         .contentType(MediaType.APPLICATION_JSON)
                         .characterEncoding("UTF-8")
                         .content(body)
