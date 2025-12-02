@@ -17,7 +17,7 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
-    @GetMapping
+    @GetMapping("/admin")
     public ResponseEntity<List<Usuario>> listarUsuarios() {
         return new ResponseEntity<>(usuarioService.listarUsuarios(), HttpStatus.OK);
     }
@@ -28,19 +28,13 @@ public class UsuarioController {
         return new ResponseEntity<>(usuario, HttpStatus.OK);
     }
 
-    @PostMapping
-    public ResponseEntity<Usuario> registrarusuario(@RequestBody Usuario usuario) {
-        Usuario usuarioRegistrado = usuarioService.registrarUsuario(usuario);
-        return new ResponseEntity<>(usuarioRegistrado, HttpStatus.CREATED);
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removerUsuario(@PathVariable Long id) {
         usuarioService.removerUsuario(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping({"/{id}"})
+    @PutMapping({"/editar/{id}"})
     public ResponseEntity<Usuario> editarUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
         Usuario updatedUsuario = usuarioService.editarUsuario(id, usuario);
         return new ResponseEntity<>(updatedUsuario, HttpStatus.OK);

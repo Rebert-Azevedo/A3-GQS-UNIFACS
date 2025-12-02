@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/funcionarios")
+@RequestMapping("/api/funcionarios/admin")
 public class FuncionarioController {
     private final FuncionarioService funcionarioService;
 

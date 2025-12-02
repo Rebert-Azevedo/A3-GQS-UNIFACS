@@ -5,17 +5,20 @@ import com.unifacs.GQS_A3.repository.UsuarioRepository;
 import com.unifacs.GQS_A3.exceptions.CampoNaoPreenchidoException;
 import com.unifacs.GQS_A3.exceptions.EmailJaCadastrado;
 import com.unifacs.GQS_A3.exceptions.RecursoNaoEncontradoException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class UsuarioService {
-
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository,
+                          PasswordEncoder passwordEncoder) {
         this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Usuario> listarUsuarios() {
@@ -36,6 +39,8 @@ public class UsuarioService {
         if (emailExistente) {
             throw new EmailJaCadastrado("Email informado já está cadastrado");
         }
+        String senhaCriptografada = passwordEncoder.encode(usuario.getSenha());
+        usuario.setSenha(senhaCriptografada);
         return usuarioRepository.save(usuario);
     }
 
