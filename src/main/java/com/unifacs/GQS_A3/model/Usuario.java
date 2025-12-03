@@ -1,54 +1,65 @@
 package com.unifacs.GQS_A3.model;
 
-import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Collection;
+import java.util.List;
 
+import com.unifacs.GQS_A3.model.enums.UserRole;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name ="usuario")
-public class Usuario {
+@Table(name = "usuario")
+public class Usuario implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String nome;
-    private String senha;
+    @Column(nullable = false, unique = true)
     private String email;
-    private boolean isAdm = false;
+    @Column(nullable = false)
+    private String senha;
 
-    public Usuario(){}
+    private LocalDate dataNascimento;
 
-    public Usuario(String nome, String senha, String email){
-        this.nome = nome;
-        this.senha = senha;
-        this.email = email;
+    @CreationTimestamp
+    @Column(nullable = false)
+    private LocalDateTime dataCriacao;
+
+    @Column(nullable = false)
+    private UserRole role = UserRole.USER;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if (this.role == UserRole.ADMIN) {
+            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        }
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
-    public Long getId() {
-        return id;
+    @Override
+    public String getPassword() {
+        return senha;
     }
 
-    public String getNome() {
-        return nome;
-    }
-
-    public String getEmail() {
+    @Override
+    public String getUsername() {
         return email;
-    }
-
-    public boolean isAdm() {
-        return isAdm;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 }
 
