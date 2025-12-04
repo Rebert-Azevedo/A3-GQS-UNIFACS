@@ -12,7 +12,6 @@ import com.unifacs.GQS_A3.model.PedidoProduto;
 import com.unifacs.GQS_A3.dto.PedidoRequestDTO;
 import com.unifacs.GQS_A3.dto.PedidoResponseDTO;
 import com.unifacs.GQS_A3.dto.ProdutoPedidoDTO;
-import com.unifacs.GQS_A3.service.PedidoProdutoService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,17 +23,14 @@ public class PedidoController {
     public final PedidoService pedidoService;
     public final UsuarioService usuarioService;
     public final ProdutoService produtoService;
-    public final PedidoProdutoService pedidoProdutoService;
 
     public PedidoController(PedidoService pedidoService,
                             UsuarioService usuarioService,
-                            ProdutoService produtoService,
-                            PedidoProdutoService pedidoProdutoService) {
+                            ProdutoService produtoService) {
 
         this.pedidoService = pedidoService;
         this.usuarioService = usuarioService;
         this.produtoService = produtoService;
-        this.pedidoProdutoService = pedidoProdutoService;
     }
 
     @GetMapping
