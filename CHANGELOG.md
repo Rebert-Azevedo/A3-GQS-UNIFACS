@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/compare/v1.2.0...v1.3.0) (2025-12-04)
+
+
+### Features
+
+* adicionado jacoco para gerar relatorios de cobertura de teste ([79dca81](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/commit/79dca818676216e91437d666bcfc6139b6249a12))
+
 # [1.2.0](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/compare/v1.1.0...v1.2.0) (2025-12-03)
 
 
