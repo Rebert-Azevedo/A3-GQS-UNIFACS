@@ -1,3 +1,20 @@
+# [1.2.0](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/compare/v1.1.0...v1.2.0) (2025-12-03)
+
+
+### Bug Fixes
+
+* add EstoqueInsuficienteException for insufficient stock validation ([de26d46](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/commit/de26d466b9e2a47967345960a67848bbb0209297))
+* add integration test for insufficient stock exception handling ([580e3c1](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/commit/580e3c121df32286ae7beea9d950ca47a2edb66d))
+* adicionada verificacao de email ja existente ([338da8e](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/commit/338da8ee47c5c7168d771647711eb06ecd8b650f))
+* initial analysis complete ([a47e38f](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/commit/a47e38f75b71ef26da0805c7157783603a5ef202))
+* initial plan ([780de6e](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/commit/780de6e9f6d86f37531d08732120a7585e90f33b))
+
+
+### Features
+
+* adicionada autenticação e autorização de usuários ([#56](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/issues/56)) ([32017ba](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/commit/32017ba9c78745a2c3154f4b48c8840814dc25b1))
+* adicionada autenticacao, autorizacao de usuarios e protecao de endpoints ([2f823f8](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/commit/2f823f89807d23c31389ff6be7232c182c2fcc39))
+
 # [1.1.0](https://github.com/Rebert-Azevedo/A3-GQS-UNIFACS/compare/v1.0.0...v1.1.0) (2025-11-13)
 
 
