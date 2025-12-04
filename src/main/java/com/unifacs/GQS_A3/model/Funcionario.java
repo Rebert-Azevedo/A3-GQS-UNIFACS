@@ -27,7 +27,7 @@ public class Funcionario {
     private String email;
     @Column(nullable = false)
     private String senha;
-    @Column(nullable = false)
+    @Column(nullable = true)
     private LocalDate dataNascimento;
     @Column(nullable = false)
     private double salario;
